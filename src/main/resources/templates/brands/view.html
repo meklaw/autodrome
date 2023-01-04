@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>View Vehicle Brand</title>
+</head>
+<body>
+<h1>View Vehicle Brand</h1>
+<!-- Display the details of the vehicle brand -->
+<p>Id: <span th:text="${brand.id}"></span></p>
+<p>Name: <span th:text="${brand.name}"></span></p>
+<p>Type: <span th:text="${brand.type}"></span></p>
+<p>Tank: <span th:text="${brand.tank}"></span></p>
+<p>Load Capacity: <span th:text="${brand.loadCapacity}"></span></p>
+<p>Number of Places: <span th:text="${brand.numberOfPlaces}"></span></p>
+<!-- Display a list of vehicles for this brand -->
+<h2>Vehicles</h2>
+<div th:each="vehicle : ${brand.vehicles}">
+  <p th:text="${vehicle.number}"></p>
+</div>
+<!-- Add links to edit and delete the vehicle brand -->
+<a th:href="@{/brands/{id}/edit(id=${brand.id})}" th:text="'Edit'"></a>
+
+<form th:action="@{/brands/{id}(id=${brand.id})}" method="post">
+  <br />
+
+  <input type="submit" value="Delete" />
+</form>
+<!-- Add a link to the index page -->
+<br />
+<a th:href="@{/brands}" th:text="'Brands'"></a>
+</body>
+</html>
+

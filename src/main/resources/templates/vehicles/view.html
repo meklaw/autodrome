@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Vehicle</title>
+</head>
+<body>
+<!--/*@thymesVar id="vehicle" type="ru.meklaw.autodrome.models.Vehicle"*/-->
+<p th:text="'ID: ' + ${vehicle.id}"></p>
+<p th:text="'Number: ' + ${vehicle.number}"></p>
+<p th:text="'Cost: ' + ${vehicle.cost}"></p>
+<p th:text="'Year of Production: ' + ${vehicle.yearOfProduction}"></p>
+<p th:text="'Mileage: ' + ${vehicle.mileage}"></p>
+<p th:text="'Brand: ' + ${vehicle.brand.name}"></p>
+
+<br/>
+<a th:href="@{/vehicles/{id}/edit(id=${vehicle.id})}" th:text="'Edit'"></a>
+
+<form method="post" th:action="@{/vehicles/{id}(id=${vehicle.id})}" th:method="delete">
+    <br/>
+    <button type="submit">Delete</button>
+</form>
+<br/>
+
+<a th:href="@{/vehicles}">Vehicles</a>
+</body>
+</html>

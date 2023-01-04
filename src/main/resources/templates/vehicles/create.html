@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Vehicle</title>
+</head>
+<body>
+<h1>Create Vehicle</h1>
+<form th:action="@{/vehicles}" th:object="${vehicle}" method="post">
+  <!-- Form fields for creating a new vehicle -->
+  <label>Number:</label>
+  <input type="text" th:field="*{number}" /><br />
+  <label>Cost:</label>
+  <input type="number" th:field="*{cost}" /><br />
+  <label>Year of Production:</label>
+  <input type="number" th:field="*{yearOfProduction}" /><br />
+  <label>Mileage:</label>
+  <input type="number" th:field="*{mileage}" /><br />
+  <label>Brand:</label>
+  <select th:field="*{brand.id}">
+    <!-- Use th:each to loop through the list of brands -->
+    <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+  </select><br />
+  <input type="submit" value="Create" />
+</form>
+<br />
+<a th:href="@{/vehicles}" th:text="'Vehicles'"></a>
+</body>
+</html>
