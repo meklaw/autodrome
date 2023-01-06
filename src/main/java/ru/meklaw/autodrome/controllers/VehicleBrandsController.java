@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.models.VehicleBrand;
 import ru.meklaw.autodrome.models.VehicleType;
 import ru.meklaw.autodrome.service.VehicleBrandsService;
-import ru.meklaw.autodrome.service.VehiclesService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,30 +47,30 @@ public class VehicleBrandsController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable int id, Model model) {
-        model.addAttribute("brand", vehicleBrandsService.findById(id).get());
+    public String findById(@PathVariable long id, Model model) {
+        model.addAttribute("brand", vehicleBrandsService.findById(id).orElseThrow());
         return "/brands/view";
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable int id, Model model) {
+    public String edit(@PathVariable long id, Model model) {
         // Create the list of vehicle types
         List<String> vehicleTypes = Arrays.stream(VehicleType.values()).map(Objects::toString).toList();
 
         // Add the list to the model
         model.addAttribute("vehicleTypes", vehicleTypes);
-        model.addAttribute("brand", vehicleBrandsService.findById(id).get());
+        model.addAttribute("brand", vehicleBrandsService.findById(id).orElseThrow());
         return "/brands/edit";
     }
 
-    @PatchMapping("/{id}")
-    public String update(@PathVariable int id, VehicleBrand brand) {
-        vehicleBrandsService.update(brand);
+    @PutMapping("/{id}")
+    public String update(@PathVariable long id, VehicleBrand brand) {
+        vehicleBrandsService.update(id, brand);
         return "redirect:/brands";
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@PathVariable long id) {
         vehicleBrandsService.delete(id);
         return "redirect:/brands";
     }

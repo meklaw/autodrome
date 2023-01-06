@@ -29,8 +29,9 @@ public class VehicleBrandsService {
         return vehicleBrandRepository.findById(id);
     }
 
-    public VehicleBrand update(VehicleBrand brand) {
-        return vehicleBrandRepository.save(brand);
+    public void update(long id, VehicleBrand brand) {
+        brand.setId(id);
+        vehicleBrandRepository.save(brand);
     }
 
     public void delete(long id) {

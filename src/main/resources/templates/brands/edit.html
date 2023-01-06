@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Edit Vehicle Brand</h1>
-<form th:action="@{/brands/{id}(id=${brand.id})}" th:object="${brand}" th:method="PATCH">
+<form th:action="@{/brands/{id}(id=${brand.id})}" th:object="${brand}" th:method="PUT">
   <input type="hidden" name="_method" value="PUT" />
   <!-- Form fields for editing the vehicle brand -->
   <label>Name:</label>

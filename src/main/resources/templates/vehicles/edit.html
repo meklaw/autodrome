@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Edit Vehicle</h1>
-<form th:action="@{/vehicles/{id}(id=${vehicle.id})}" th:object="${vehicle}" th:method="PATCH">
+<form th:action="@{/vehicles/{id}(id=${vehicle.id})}" th:object="${vehicle}" th:method="PUT">
   <input type="hidden" th:field="*{id}" />
   <!-- Form fields for editing the vehicle -->
   <label>Number:</label>

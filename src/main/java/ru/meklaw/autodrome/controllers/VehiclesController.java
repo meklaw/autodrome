@@ -54,7 +54,7 @@ public class VehiclesController {
         return "/vehicles/edit";
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public String update(@PathVariable long id, Vehicle vehicle) {
         vehiclesService.update(id, vehicle);
         return "redirect:/vehicles";
