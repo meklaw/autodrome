@@ -3,10 +3,11 @@ package ru.meklaw.autodrome.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.meklaw.autodrome.models.Enterprise;
-import ru.meklaw.autodrome.models.Vehicle;
+import ru.meklaw.autodrome.models.Manager;
 import ru.meklaw.autodrome.repositories.EnterprisesRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EnterprisesService {
@@ -17,8 +18,7 @@ public class EnterprisesService {
         this.enterprisesRepository = enterprisesRepository;
     }
 
-
-    public List<Enterprise> findAll() {
-        return enterprisesRepository.findAll();
+    public List<Enterprise> findAllByManagers(Set<Manager> managers) {
+        return enterprisesRepository.findAllByManagersIn(managers);
     }
 }
