@@ -44,26 +44,26 @@ public class VehiclesController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable int id, Model model) {
+    public String findById(@PathVariable long id, Model model) {
         model.addAttribute("vehicle", vehiclesService.findById(id).get());
         return "/vehicles/view";
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable int id, Model model) {
+    public String edit(@PathVariable long id, Model model) {
         model.addAttribute("vehicle", vehiclesService.findById(id).get());
         model.addAttribute("brands", vehicleBrandsService.findAll());
         return "/vehicles/edit";
     }
 
     @PatchMapping("/{id}")
-    public String update(@PathVariable int id, Vehicle vehicle) {
-        vehiclesService.update(vehicle);
+    public String update(@PathVariable long id, Vehicle vehicle) {
+        vehiclesService.update(id, vehicle);
         return "redirect:/vehicles";
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@PathVariable long id) {
         vehiclesService.delete(id);
         return "redirect:/vehicles";
     }
