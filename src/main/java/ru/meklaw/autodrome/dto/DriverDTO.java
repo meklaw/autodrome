@@ -1,12 +1,9 @@
 package ru.meklaw.autodrome.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.meklaw.autodrome.models.Enterprise;
-import ru.meklaw.autodrome.models.Vehicle;
 
 
 @Getter
@@ -22,7 +19,7 @@ public class DriverDTO {
 
     private boolean isActive;
 
-    private Long enterprise;
+    private Long enterpriseId;
 
-    private Long vehicle;
+    private Long vehicleId;
 }

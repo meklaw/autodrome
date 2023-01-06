@@ -1,14 +1,13 @@
 package ru.meklaw.autodrome.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.meklaw.autodrome.dto.DriverDTO;
 import ru.meklaw.autodrome.models.Driver;
-import ru.meklaw.autodrome.models.Manager;
 import ru.meklaw.autodrome.service.DriverService;
-import ru.meklaw.autodrome.service.ManagerService;
 
 import java.util.List;
 
@@ -16,10 +15,12 @@ import java.util.List;
 @RequestMapping("/api/driver")
 public class DriverRestController {
     private final DriverService driverService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public DriverRestController(DriverService driverService) {
+    public DriverRestController(DriverService driverService, ModelMapper modelMapper) {
         this.driverService = driverService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
@@ -28,15 +29,6 @@ public class DriverRestController {
     }
 
     private DriverDTO convertToDriverDTO(Driver driver) {
-        DriverDTO dto = new DriverDTO();
-
-        dto.setId(driver.getId());
-        dto.setName(driver.getName());
-        dto.setSalary(driver.getSalary());
-        dto.setActive(driver.isActive());
-        dto.setEnterprise(driver.getEnterprise().getId());
-        dto.setVehicle(driver.getVehicle().getId());
-
-        return dto;
+        return modelMapper.map(driver, DriverDTO.class);
     }
 }
