@@ -1,10 +1,11 @@
 package ru.meklaw.autodrome.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.VehicleDTO;
 import ru.meklaw.autodrome.models.Vehicle;
 import ru.meklaw.autodrome.security.ManagerDetails;
@@ -16,10 +17,12 @@ import java.util.List;
 @RequestMapping("/api/vehicles")
 public class VehiclesRestController {
     private final VehiclesService vehiclesService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public VehiclesRestController(VehiclesService vehiclesService) {
+    public VehiclesRestController(VehiclesService vehiclesService, ModelMapper modelMapper) {
         this.vehiclesService = vehiclesService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
@@ -33,17 +36,38 @@ public class VehiclesRestController {
                 .toList();
     }
 
+    @PostMapping
+    public ResponseEntity<HttpStatus> create(@RequestBody VehicleDTO vehicleDTO) {
+        vehiclesService.create(convertToVehicle(vehicleDTO));
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(@PathVariable long id, @RequestBody VehicleDTO vehicleDTO) {
+        vehiclesService.update(id, convertToVehicle(vehicleDTO));
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
+        vehiclesService.delete(id);
+
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
     private VehicleDTO convertToVehicleDTO(Vehicle vehicle) {
-        VehicleDTO dto = new VehicleDTO();
+        return modelMapper.map(vehicle, VehicleDTO.class);
+    }
 
-        dto.setId(vehicle.getId());
-        dto.setNumber(vehicle.getNumber());
-        dto.setCost(vehicle.getCost());
-        dto.setYearOfProduction(vehicle.getYearOfProduction());
-        dto.setMileage(vehicle.getMileage());
-        dto.setBrand(vehicle.getBrand().getId());
+    private Vehicle convertToVehicle(VehicleDTO dto) {
+        Vehicle vehicle = modelMapper.map(dto, Vehicle.class);
 
-        return dto;
+        vehiclesService.enriseBrand(vehicle, dto);
+        vehiclesService.enriseEnterprise(vehicle, dto);
+
+        return vehicle;
     }
 
 }
