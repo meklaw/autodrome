@@ -1,12 +1,10 @@
 package ru.meklaw.autodrome.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.models.Vehicle;
-import ru.meklaw.autodrome.security.ManagerDetails;
 import ru.meklaw.autodrome.service.VehicleBrandsService;
 import ru.meklaw.autodrome.service.VehiclesService;
 
@@ -45,13 +43,13 @@ public class VehiclesController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable long id, Model model) {
-        model.addAttribute("vehicle", vehiclesService.findById(id).get());
+        model.addAttribute("vehicle", vehiclesService.findById(id).orElseThrow());
         return "/vehicles/view";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable long id, Model model) {
-        model.addAttribute("vehicle", vehiclesService.findById(id).get());
+        model.addAttribute("vehicle", vehiclesService.findById(id).orElseThrow());
         model.addAttribute("brands", vehicleBrandsService.findAll());
         return "/vehicles/edit";
     }
