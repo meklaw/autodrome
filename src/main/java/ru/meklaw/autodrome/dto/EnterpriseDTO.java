@@ -1,6 +1,5 @@
 package ru.meklaw.autodrome.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +18,7 @@ public class EnterpriseDTO {
     private String name;
     private String city;
     private LocalDate founded;
-    private List<Long> vehicles;
-    private List<Long> drivers;
+    private List<VehicleDTO> vehicles;
+    private List<DriverDTO> drivers;
 }
+
