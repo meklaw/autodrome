@@ -15,5 +15,6 @@ public class VehicleDTO {
     private int cost;
     private int yearOfProduction;
     private int mileage;
-    private Long brand;
+    private Long vehicleBrandId;
+    private Long enterpriseId;
 }
