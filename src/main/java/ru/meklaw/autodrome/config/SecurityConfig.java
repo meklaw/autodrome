@@ -10,35 +10,37 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.meklaw.autodrome.service.ManageDetailsService;
+import ru.meklaw.autodrome.service.PersonDetailsService;
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final ManageDetailsService manageDetailsService;
+    private final PersonDetailsService personDetailsService;
 
     @Autowired
-    public SecurityConfig(ManageDetailsService manageDetailsService) {
-        this.manageDetailsService = manageDetailsService;
+    public SecurityConfig(PersonDetailsService personDetailsService) {
+        this.personDetailsService = personDetailsService;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                .ignoringRequestMatchers("/api/**")
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/**").authenticated()
-                .and()
-                .formLogin();
+                .ignoringRequestMatchers("/api/**");
 
         http
                 .authorizeHttpRequests()
                 .requestMatchers("/api/**").hasRole("MANAGER")
                 .and()
                 .httpBasic();
+
+        http
+                .authorizeHttpRequests()
+                .requestMatchers("/**").authenticated()
+                .and()
+                .formLogin();
+
 
         return http.build();
     }
@@ -47,7 +49,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http
                 .getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(manageDetailsService)
+                .userDetailsService(personDetailsService)
                 .passwordEncoder(passwordEncoder())
                 .and()
                 .build();
