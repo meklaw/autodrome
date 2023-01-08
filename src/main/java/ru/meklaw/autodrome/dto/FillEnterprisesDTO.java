@@ -13,5 +13,5 @@ import lombok.Setter;
 public class FillEnterprisesDTO {
     private Long enterpriseId;
 
-    private int countCars;
+    private int countVehicles;
 }
