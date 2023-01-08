@@ -15,10 +15,10 @@ public class Manager {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username")
-    private String username;
-    @Column(name = "password")
-    private String password;
+
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
 
     @ManyToMany()
     @JoinTable(
@@ -27,4 +27,24 @@ public class Manager {
             inverseJoinColumns = @JoinColumn(name = "enterprise_id")
     )
     private List<Enterprise> enterprises;
+
+    public String getUsername() {
+        return person.getUsername();
+    }
+
+    public String getPassword() {
+        return person.getPassword();
+    }
+
+    public String getRole() {
+        return person.getRole();
+    }
+
+    public void setUsername(String username) {
+        person.setUsername(username);
+    }
+
+    public void setPassword(String password) {
+        person.setPassword(password);
+    }
 }

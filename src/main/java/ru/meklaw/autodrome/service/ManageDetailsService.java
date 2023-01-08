@@ -1,7 +1,6 @@
 package ru.meklaw.autodrome.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class ManageDetailsService implements UserDetailsService {
     //упрощает код что-то там
     @Override
     public ManagerDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Manager> manager = managerRepository.findByUsername(username);
+        Optional<Manager> manager = managerRepository.findByPersonUsername(username);
         if (manager.isEmpty())
             throw new UsernameNotFoundException("User not found!");
 
