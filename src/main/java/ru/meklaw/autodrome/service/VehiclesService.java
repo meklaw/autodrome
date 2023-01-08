@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.meklaw.autodrome.dto.VehicleDTO;
-import ru.meklaw.autodrome.models.Manager;
 import ru.meklaw.autodrome.models.Person;
 import ru.meklaw.autodrome.models.Vehicle;
 import ru.meklaw.autodrome.repositories.EnterprisesRepository;
 import ru.meklaw.autodrome.repositories.VehicleBrandRepository;
 import ru.meklaw.autodrome.repositories.VehiclesRepository;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,17 +38,17 @@ public class VehiclesService {
         return vehiclesRepository.findAllByEnterprise_ManagersIn(Collections.singleton(person.getManager()));
     }
 
-    public Vehicle create(Vehicle vehicle) {
-        return vehiclesRepository.save(vehicle);
+    public void create(Vehicle vehicle) {
+        vehiclesRepository.save(vehicle);
     }
 
     public Optional<Vehicle> findById(long id) {
         return vehiclesRepository.findById(id);
     }
 
-    public Vehicle update(long id, Vehicle vehicle) {
+    public void update(long id, Vehicle vehicle) {
         vehicle.setId(id);
-        return vehiclesRepository.save(vehicle);
+        vehiclesRepository.save(vehicle);
     }
 
     public void delete(long id) {

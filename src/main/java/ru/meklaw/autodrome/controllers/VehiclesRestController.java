@@ -4,11 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.VehicleDTO;
 import ru.meklaw.autodrome.models.Vehicle;
-import ru.meklaw.autodrome.security.ManagerDetails;
 import ru.meklaw.autodrome.service.VehiclesService;
 
 import java.util.List;
@@ -27,10 +25,7 @@ public class VehiclesRestController {
 
     @GetMapping
     public List<VehicleDTO> index() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        ManagerDetails managerDetails = (ManagerDetails) authentication.getPrincipal();
-
-        return vehiclesService.findAllByManager(managerDetails.getManager())
+        return vehiclesService.findAllByManager()
                 .stream()
                 .map(this::convertToVehicleDTO)
                 .toList();
