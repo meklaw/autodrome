@@ -1,10 +1,9 @@
 package ru.meklaw.autodrome.controllers;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.EnterpriseDTO;
+import ru.meklaw.autodrome.dto.FillEnterprisesDTO;
 import ru.meklaw.autodrome.models.Enterprise;
 import ru.meklaw.autodrome.service.EnterprisesService;
 
@@ -25,6 +24,14 @@ public class EnterpriseRestController {
     @GetMapping
     public List<EnterpriseDTO> index() {
         return enterprisesService.findAllByManager()
+                .stream()
+                .map(this::convertToEnterpriseDTO)
+                .toList();
+    }
+
+    @PostMapping("/init")
+    public List<EnterpriseDTO> init(@RequestBody List<FillEnterprisesDTO> enterprises) {
+        return enterprisesService.init(enterprises)
                 .stream()
                 .map(this::convertToEnterpriseDTO)
                 .toList();
