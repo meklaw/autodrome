@@ -1,16 +1,13 @@
 package ru.meklaw.autodrome.controllers;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.meklaw.autodrome.dto.EnterpriseDTO;
 import ru.meklaw.autodrome.models.Enterprise;
-import ru.meklaw.autodrome.security.ManagerDetails;
 import ru.meklaw.autodrome.service.EnterprisesService;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -27,10 +24,7 @@ public class EnterpriseRestController {
 
     @GetMapping
     public List<EnterpriseDTO> index() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        ManagerDetails managerDetails = (ManagerDetails) authentication.getPrincipal();
-
-        return enterprisesService.findAllByManagers(Collections.singleton(managerDetails.getManager()))
+        return enterprisesService.findAll()
                 .stream()
                 .map(this::convertToEnterpriseDTO)
                 .toList();
