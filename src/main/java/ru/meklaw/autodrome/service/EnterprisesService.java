@@ -19,7 +19,7 @@ public class EnterprisesService {
         this.enterprisesRepository = enterprisesRepository;
     }
 
-    public List<Enterprise> findAll() {
+    public List<Enterprise> findAllByManager() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         Person person = (Person) authentication.getPrincipal();
 

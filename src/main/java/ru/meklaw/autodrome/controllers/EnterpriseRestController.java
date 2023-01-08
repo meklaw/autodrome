@@ -24,7 +24,7 @@ public class EnterpriseRestController {
 
     @GetMapping
     public List<EnterpriseDTO> index() {
-        return enterprisesService.findAll()
+        return enterprisesService.findAllByManager()
                 .stream()
                 .map(this::convertToEnterpriseDTO)
                 .toList();
