@@ -2,6 +2,7 @@ package ru.meklaw.autodrome.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +23,10 @@ public class VehiclesRestController {
         this.vehiclesService = vehiclesService;
         this.modelMapper = modelMapper;
     }
-
     @GetMapping
-    public List<VehicleDTO> index() {
-        return vehiclesService.findAllByManager()
+    public List<VehicleDTO> index(@RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "20") int size) {
+        return vehiclesService.findAllByManager(PageRequest.of(page, size))
                 .stream()
                 .map(this::convertToVehicleDTO)
                 .toList();

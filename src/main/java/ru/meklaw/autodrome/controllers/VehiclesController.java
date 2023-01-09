@@ -1,6 +1,7 @@
 package ru.meklaw.autodrome.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,10 @@ public class VehiclesController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("vehicles", vehiclesService.findAll());
+    public String index(@RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "20") int size,
+                        Model model) {
+        model.addAttribute("vehicles", vehiclesService.findAll(PageRequest.of(page, size)));
 
         return "/vehicles/index";
     }

@@ -1,6 +1,9 @@
 package ru.meklaw.autodrome.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.meklaw.autodrome.dto.VehicleDTO;
@@ -27,15 +30,18 @@ public class VehiclesService {
         this.enterprisesRepository = enterprisesRepository;
     }
 
-    public List<Vehicle> findAll() {
-        return vehiclesRepository.findAll();
+    public Page<Vehicle> findAll(PageRequest of) {
+        return vehiclesRepository.findAll(of.withSort(Sort.by("id")));
     }
 
-    public List<Vehicle> findAllByManager() {
+    public List<Vehicle> findAllByManager(PageRequest of) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         Person person = (Person) authentication.getPrincipal();
 
-        return vehiclesRepository.findAllByEnterprise_ManagersIn(Collections.singleton(person.getManager()));
+        return vehiclesRepository.findAllByEnterprise_ManagersIn(
+                Collections.singleton(person.getManager()),
+                of.withSort(Sort.by("id"))
+        );
     }
 
     public void create(Vehicle vehicle) {
