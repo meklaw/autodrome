@@ -36,6 +36,7 @@ public class Vehicle {
     @JoinColumn(name = "enterprise_id", referencedColumnName = "id")
     private Enterprise enterprise;
 
-    @OneToMany(mappedBy = "vehicle")
+//    TODO remove CascadeType and change database to SET NULL when delete
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
     private List<Driver> drivers;
 }
