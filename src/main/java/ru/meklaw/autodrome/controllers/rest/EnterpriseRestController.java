@@ -1,6 +1,7 @@
 package ru.meklaw.autodrome.controllers.rest;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.EnterpriseDTO;
 import ru.meklaw.autodrome.dto.FillEnterprisesDTO;
@@ -15,6 +16,7 @@ public class EnterpriseRestController {
     private final EnterprisesService enterprisesService;
     private final ModelMapper modelMapper;
 
+    @Autowired
     public EnterpriseRestController(EnterprisesService enterprisesService, ModelMapper modelMapper) {
         this.enterprisesService = enterprisesService;
         this.modelMapper = modelMapper;
