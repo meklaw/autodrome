@@ -40,11 +40,21 @@ public class SecurityConfig {
                 .httpBasic();
 
         http
-                .authorizeHttpRequests()
-                .requestMatchers("/**")
-                .authenticated()
+                .authorizeHttpRequests(auth ->
+                        auth
+                                .requestMatchers("/auth/**")
+                                .permitAll()
+                                .requestMatchers("/**")
+                                .authenticated()
+                )
+                .formLogin()
+                .loginPage("/auth/login")
+                .loginProcessingUrl("/process_login")
+                .failureUrl("/auth/login?error")
                 .and()
-                .formLogin();
+                .logout()//настройка выхода
+                .logoutUrl("/logout")//переход на какую страницу будет совершаться выход
+                .logoutSuccessUrl("/auth/login"); //какая страница будет открываться после выхода;
 
 
         return http.build();
