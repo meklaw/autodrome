@@ -31,13 +31,15 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests()
-                .requestMatchers("/api/**").hasRole("MANAGER")
+                .requestMatchers("/api/**")
+                .hasRole("MANAGER")
                 .and()
                 .httpBasic();
 
         http
                 .authorizeHttpRequests()
-                .requestMatchers("/**").authenticated()
+                .requestMatchers("/**")
+                .authenticated()
                 .and()
                 .formLogin();
 

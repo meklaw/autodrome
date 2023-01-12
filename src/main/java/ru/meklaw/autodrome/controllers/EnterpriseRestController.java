@@ -24,17 +24,17 @@ public class EnterpriseRestController {
     @GetMapping
     public List<EnterpriseDTO> index() {
         return enterprisesService.findAllByManager()
-                .stream()
-                .map(this::convertToEnterpriseDTO)
-                .toList();
+                                 .stream()
+                                 .map(this::convertToEnterpriseDTO)
+                                 .toList();
     }
 
     @PostMapping("/init")
     public List<EnterpriseDTO> init(@RequestBody List<FillEnterprisesDTO> enterprises) {
         return enterprisesService.init(enterprises)
-                .stream()
-                .map(this::convertToEnterpriseDTO)
-                .toList();
+                                 .stream()
+                                 .map(this::convertToEnterpriseDTO)
+                                 .toList();
     }
 
     private EnterpriseDTO convertToEnterpriseDTO(Enterprise enterprise) {

@@ -35,7 +35,8 @@ public class VehiclesService {
     }
 
     public List<Vehicle> findAllByManager(PageRequest of) {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var authentication = SecurityContextHolder.getContext()
+                                                  .getAuthentication();
         Person person = (Person) authentication.getPrincipal();
 
         return vehiclesRepository.findAllByEnterprise_ManagersIn(
@@ -62,10 +63,12 @@ public class VehiclesService {
     }
 
     public void enriseBrand(Vehicle vehicle, VehicleDTO dto) {
-        vehicle.setBrand(vehicleBrandRepository.findById(dto.getVehicleBrandId()).orElseThrow());
+        vehicle.setBrand(vehicleBrandRepository.findById(dto.getVehicleBrandId())
+                                               .orElseThrow());
     }
 
     public void enriseEnterprise(Vehicle vehicle, VehicleDTO dto) {
-        vehicle.setEnterprise(enterprisesRepository.findById(dto.getEnterpriseId()).orElseThrow());
+        vehicle.setEnterprise(enterprisesRepository.findById(dto.getEnterpriseId())
+                                                   .orElseThrow());
     }
 }

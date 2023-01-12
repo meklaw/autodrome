@@ -31,7 +31,9 @@ public class VehicleBrandsController {
     @GetMapping("/create")
     public String create(Model model) {
         // Create the list of vehicle types
-        List<String> vehicleTypes = Arrays.stream(VehicleType.values()).map(Objects::toString).toList();
+        List<String> vehicleTypes = Arrays.stream(VehicleType.values())
+                                          .map(Objects::toString)
+                                          .toList();
         // Add the list to the model
         model.addAttribute("vehicleTypes", vehicleTypes);
         model.addAttribute("brand", new VehicleBrand());
@@ -48,18 +50,22 @@ public class VehicleBrandsController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable long id, Model model) {
-        model.addAttribute("brand", vehicleBrandsService.findById(id).orElseThrow());
+        model.addAttribute("brand", vehicleBrandsService.findById(id)
+                                                        .orElseThrow());
         return "/brands/view";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable long id, Model model) {
         // Create the list of vehicle types
-        List<String> vehicleTypes = Arrays.stream(VehicleType.values()).map(Objects::toString).toList();
+        List<String> vehicleTypes = Arrays.stream(VehicleType.values())
+                                          .map(Objects::toString)
+                                          .toList();
 
         // Add the list to the model
         model.addAttribute("vehicleTypes", vehicleTypes);
-        model.addAttribute("brand", vehicleBrandsService.findById(id).orElseThrow());
+        model.addAttribute("brand", vehicleBrandsService.findById(id)
+                                                        .orElseThrow());
         return "/brands/edit";
     }
 

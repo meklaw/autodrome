@@ -32,7 +32,8 @@ public class EnterprisesService {
     }
 
     public List<Enterprise> findAllByManager() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var authentication = SecurityContextHolder.getContext()
+                                                  .getAuthentication();
         Person person = (Person) authentication.getPrincipal();
 
         return enterprisesRepository.findAllByManagersIn(Collections.singleton(person.getManager()));
@@ -48,14 +49,15 @@ public class EnterprisesService {
         enterprises.forEach(this::fillEnterprise);
         return enterprisesRepository.findAllByIdIn(
                 enterprises.stream()
-                        .map(FillEnterprisesDTO::getEnterpriseId)
-                        .toList()
+                           .map(FillEnterprisesDTO::getEnterpriseId)
+                           .toList()
         );
     }
 
     @Transactional
     void fillEnterprise(FillEnterprisesDTO dto) {
-        Enterprise enterprise = enterprisesRepository.findById(dto.getEnterpriseId()).orElseThrow();
+        Enterprise enterprise = enterprisesRepository.findById(dto.getEnterpriseId())
+                                                     .orElseThrow();
         List<VehicleBrand> brands = vehicleBrandRepository.findAll();
         Random random = new Random();
 
@@ -67,10 +69,13 @@ public class EnterprisesService {
             vehicle.setMileage(random.nextInt(100000));
 
             vehicle.setBrand(brands.get(i % brands.size()));
-            brands.get(i % brands.size()).getVehicles().add(vehicle);
+            brands.get(i % brands.size())
+                  .getVehicles()
+                  .add(vehicle);
 
             vehicle.setEnterprise(enterprise);
-            enterprise.getVehicles().add(vehicle);
+            enterprise.getVehicles()
+                      .add(vehicle);
 
             Driver driver = new Driver();
             driver.setName("Bob " + enterprise.getId() + i);
@@ -78,12 +83,14 @@ public class EnterprisesService {
             driver.setActive(random.nextInt(10) == 0);
 
             driver.setEnterprise(enterprise);
-            enterprise.getDrivers().add(driver);
+            enterprise.getDrivers()
+                      .add(driver);
 
             driver.setVehicle(vehicle);
             if (vehicle.getDrivers() == null)
                 vehicle.setDrivers(new ArrayList<>());
-            vehicle.getDrivers().add(driver);
+            vehicle.getDrivers()
+                   .add(driver);
 
             driverRepository.save(driver);
             vehiclesRepository.save(vehicle);

@@ -1,7 +1,9 @@
 package ru.meklaw.autodrome.models;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -32,19 +34,19 @@ public class Manager {
         return person.getUsername();
     }
 
-    public String getPassword() {
-        return person.getPassword();
-    }
-
-    public String getRole() {
-        return person.getRole();
-    }
-
     public void setUsername(String username) {
         person.setUsername(username);
     }
 
+    public String getPassword() {
+        return person.getPassword();
+    }
+
     public void setPassword(String password) {
         person.setPassword(password);
+    }
+
+    public String getRole() {
+        return person.getRole();
     }
 }

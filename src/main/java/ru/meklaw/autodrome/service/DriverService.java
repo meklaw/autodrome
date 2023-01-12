@@ -21,7 +21,8 @@ public class DriverService {
 
 
     public List<Driver> findAllByManager() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var authentication = SecurityContextHolder.getContext()
+                                                  .getAuthentication();
         Person person = (Person) authentication.getPrincipal();
 
         return driverRepository.findAllByEnterprise_ManagersIn(Collections.singleton(person.getManager()));

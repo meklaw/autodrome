@@ -11,5 +11,6 @@ import java.util.List;
 @Repository
 public interface EnterprisesRepository extends JpaRepository<Enterprise, Long> {
     List<Enterprise> findAllByManagersIn(Collection<Manager> managers);
+
     List<Enterprise> findAllByIdIn(Collection<Long> enterprises);
 }

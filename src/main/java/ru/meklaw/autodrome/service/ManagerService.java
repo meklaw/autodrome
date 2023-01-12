@@ -18,6 +18,7 @@ public class ManagerService {
         this.managerRepository = managerRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     @Transactional
     public void register(Manager manager) {
         manager.setPassword(passwordEncoder.encode(manager.getPassword()));
@@ -25,6 +26,7 @@ public class ManagerService {
     }
 
     public Manager findById(Long id) {
-        return managerRepository.findById(id).orElseThrow();
+        return managerRepository.findById(id)
+                                .orElseThrow();
     }
 }

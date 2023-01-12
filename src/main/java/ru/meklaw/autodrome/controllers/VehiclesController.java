@@ -46,13 +46,15 @@ public class VehiclesController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable long id, Model model) {
-        model.addAttribute("vehicle", vehiclesService.findById(id).orElseThrow());
+        model.addAttribute("vehicle", vehiclesService.findById(id)
+                                                     .orElseThrow());
         return "/vehicles/view";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable long id, Model model) {
-        model.addAttribute("vehicle", vehiclesService.findById(id).orElseThrow());
+        model.addAttribute("vehicle", vehiclesService.findById(id)
+                                                     .orElseThrow());
         model.addAttribute("brands", vehicleBrandsService.findAll());
         return "/vehicles/edit";
     }

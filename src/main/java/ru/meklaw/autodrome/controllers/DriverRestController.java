@@ -25,7 +25,10 @@ public class DriverRestController {
 
     @GetMapping
     public List<DriverDTO> index() {
-        return driverService.findAllByManager().stream().map(this::convertToDriverDTO).toList();
+        return driverService.findAllByManager()
+                            .stream()
+                            .map(this::convertToDriverDTO)
+                            .toList();
     }
 
     private DriverDTO convertToDriverDTO(Driver driver) {
