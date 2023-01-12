@@ -1,4 +1,4 @@
-package ru.meklaw.autodrome.controllers;
+package ru.meklaw.autodrome.controllers.rest;
 
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;

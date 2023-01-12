@@ -1,4 +1,4 @@
-package ru.meklaw.autodrome.controllers;
+package ru.meklaw.autodrome.controllers.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

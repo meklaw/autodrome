@@ -1,4 +1,4 @@
-package ru.meklaw.autodrome.controllers;
+package ru.meklaw.autodrome.controllers.rest;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;

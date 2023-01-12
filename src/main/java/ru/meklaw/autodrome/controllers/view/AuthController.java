@@ -1,4 +1,4 @@
-package ru.meklaw.autodrome.controllers;
+package ru.meklaw.autodrome.controllers.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
