@@ -30,6 +30,10 @@ public class Manager {
     )
     private List<Enterprise> enterprises;
 
+    public Manager(Person person) {
+        this.person = person;
+    }
+
     public String getUsername() {
         return person.getUsername();
     }
