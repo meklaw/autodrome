@@ -30,10 +30,13 @@ public class SecurityConfig {
                 .ignoringRequestMatchers("/api/**");
 
         http
-                .authorizeHttpRequests()
-                .requestMatchers("/api/**")
-                .hasRole("MANAGER")
-                .and()
+                .authorizeHttpRequests(auth ->
+                        auth
+                                .requestMatchers("/api/auth/**")
+                                .permitAll()
+                                .requestMatchers("/api/**")
+                                .hasRole("MANAGER")
+                )
                 .httpBasic();
 
         http
