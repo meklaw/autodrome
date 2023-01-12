@@ -14,11 +14,11 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/brands")
-public class VehicleBrandsController {
+public class VehicleBrandController {
     private final VehicleBrandsService vehicleBrandsService;
 
     @Autowired
-    public VehicleBrandsController(VehicleBrandsService vehicleBrandsService) {
+    public VehicleBrandController(VehicleBrandsService vehicleBrandsService) {
         this.vehicleBrandsService = vehicleBrandsService;
     }
 

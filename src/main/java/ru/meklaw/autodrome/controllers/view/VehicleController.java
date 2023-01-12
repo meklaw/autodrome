@@ -12,12 +12,12 @@ import ru.meklaw.autodrome.service.VehiclesService;
 
 @Controller
 @RequestMapping("/vehicles")
-public class VehiclesController {
+public class VehicleController {
     private final VehiclesService vehiclesService;
     private final VehicleBrandsService vehicleBrandsService;
 
     @Autowired
-    public VehiclesController(VehiclesService vehiclesService, VehicleBrandsService vehicleBrandsService) {
+    public VehicleController(VehiclesService vehiclesService, VehicleBrandsService vehicleBrandsService) {
         this.vehiclesService = vehiclesService;
         this.vehicleBrandsService = vehicleBrandsService;
     }

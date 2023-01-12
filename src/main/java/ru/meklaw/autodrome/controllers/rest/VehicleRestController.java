@@ -14,12 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicles")
-public class VehiclesRestController {
+public class VehicleRestController {
     private final VehiclesService vehiclesService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public VehiclesRestController(VehiclesService vehiclesService, ModelMapper modelMapper) {
+    public VehicleRestController(VehiclesService vehiclesService, ModelMapper modelMapper) {
         this.vehiclesService = vehiclesService;
         this.modelMapper = modelMapper;
     }
