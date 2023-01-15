@@ -45,7 +45,7 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**")
                                 .permitAll()
                                 .requestMatchers("/**")
-                                .authenticated()
+                                .hasRole("MANAGER")
                 )
                 .formLogin()
                 .loginPage("/auth/login")
