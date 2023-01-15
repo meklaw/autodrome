@@ -38,7 +38,7 @@ public class RegistrationService {
                   .get(0)
                   .getAuthority()
                   .equals("ROLE_MANAGER")) {
-            managerRepository.save(new Manager(person));
+            managerRepository.save((Manager) person);
         }
     }
 }

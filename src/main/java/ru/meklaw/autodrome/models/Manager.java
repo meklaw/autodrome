@@ -9,18 +9,19 @@ import java.util.List;
 
 @Entity
 @Table(name = "manager")
+@DiscriminatorValue("Manager")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Manager {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Manager extends Person{
+//    @Id
+//    @Column(name = "id")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
+//    @OneToOne
+//    @JoinColumn(name = "person_id")
+//    private Person person;
 
     @ManyToMany()
     @JoinTable(
@@ -30,27 +31,27 @@ public class Manager {
     )
     private List<Enterprise> enterprises;
 
-    public Manager(Person person) {
-        this.person = person;
-    }
+//    public Manager(Person person) {
+//        this.person = person;
+//    }
 
-    public String getUsername() {
-        return person.getUsername();
-    }
-
-    public void setUsername(String username) {
-        person.setUsername(username);
-    }
-
-    public String getPassword() {
-        return person.getPassword();
-    }
-
-    public void setPassword(String password) {
-        person.setPassword(password);
-    }
-
-    public String getRole() {
-        return person.getRole();
-    }
+//    public String getUsername() {
+//        return person.getUsername();
+//    }
+//
+//    public void setUsername(String username) {
+//        person.setUsername(username);
+//    }
+//
+//    public String getPassword() {
+//        return person.getPassword();
+//    }
+//
+//    public void setPassword(String password) {
+//        person.setPassword(password);
+//    }
+//
+//    public String getRole() {
+//        return person.getRole();
+//    }
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.meklaw.autodrome.models.Driver;
-import ru.meklaw.autodrome.models.Person;
+import ru.meklaw.autodrome.models.Manager;
 import ru.meklaw.autodrome.repositories.DriverRepository;
 
 import java.util.Collections;
@@ -23,8 +23,8 @@ public class DriverService {
     public List<Driver> findAllByManager() {
         var authentication = SecurityContextHolder.getContext()
                                                   .getAuthentication();
-        Person person = (Person) authentication.getPrincipal();
+        Manager manager = (Manager) authentication.getPrincipal();
 
-        return driverRepository.findAllByEnterprise_ManagersIn(Collections.singleton(person.getManager()));
+        return driverRepository.findAllByEnterprise_ManagersIn(Collections.singleton(manager));
     }
 }

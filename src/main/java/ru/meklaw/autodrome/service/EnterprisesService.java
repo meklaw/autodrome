@@ -34,9 +34,9 @@ public class EnterprisesService {
     public List<Enterprise> findAllByManager() {
         var authentication = SecurityContextHolder.getContext()
                                                   .getAuthentication();
-        Person person = (Person) authentication.getPrincipal();
+        Manager manager = (Manager) authentication.getPrincipal();
 
-        return enterprisesRepository.findAllByManagersIn(Collections.singleton(person.getManager()));
+        return enterprisesRepository.findAllByManagersIn(Collections.singleton(manager));
     }
 
     @Transactional

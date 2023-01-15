@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Person implements UserDetails {
     @Id
     @Column(name = "id")
@@ -27,9 +28,8 @@ public class Person implements UserDetails {
     @Column(name = "role")
     private String role;
 
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Manager manager;
-
+//    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private Manager manager;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.meklaw.autodrome.dto.VehicleDTO;
-import ru.meklaw.autodrome.models.Person;
+import ru.meklaw.autodrome.models.Manager;
 import ru.meklaw.autodrome.models.Vehicle;
 import ru.meklaw.autodrome.repositories.EnterprisesRepository;
 import ru.meklaw.autodrome.repositories.VehicleBrandRepository;
@@ -37,10 +37,10 @@ public class VehiclesService {
     public List<Vehicle> findAllByManager(PageRequest of) {
         var authentication = SecurityContextHolder.getContext()
                                                   .getAuthentication();
-        Person person = (Person) authentication.getPrincipal();
+        Manager manager = (Manager) authentication.getPrincipal();
 
         return vehiclesRepository.findAllByEnterprise_ManagersIn(
-                Collections.singleton(person.getManager()),
+                Collections.singleton(manager),
                 of.withSort(Sort.by("id"))
         );
     }
