@@ -31,7 +31,8 @@ public class EnterprisesService {
         this.driverRepository = driverRepository;
     }
 
-    public List<Enterprise> findAllByManager() {
+    @Transactional
+    public List<Enterprise> findAll() {
         var authentication = SecurityContextHolder.getContext()
                                                   .getAuthentication();
         Manager manager = (Manager) authentication.getPrincipal();
@@ -39,10 +40,6 @@ public class EnterprisesService {
         return enterprisesRepository.findAllByManagersIn(Collections.singleton(manager));
     }
 
-    @Transactional
-    public List<Enterprise> findAll() {
-        return enterprisesRepository.findAll();
-    }
 
     @Transactional
     public List<Enterprise> init(List<FillEnterprisesDTO> enterprises) {
