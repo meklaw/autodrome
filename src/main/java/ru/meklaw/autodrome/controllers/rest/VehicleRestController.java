@@ -27,7 +27,7 @@ public class VehicleRestController {
     @GetMapping
     public List<VehicleDTO> index(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "20") int size) {
-        return vehiclesService.findAllByManager(PageRequest.of(page, size))
+        return vehiclesService.findAll(PageRequest.of(page, size))
                               .stream()
                               .map(this::convertToVehicleDTO)
                               .toList();

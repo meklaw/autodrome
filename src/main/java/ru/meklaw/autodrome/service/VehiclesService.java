@@ -1,7 +1,6 @@
 package ru.meklaw.autodrome.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,11 +29,8 @@ public class VehiclesService {
         this.enterprisesRepository = enterprisesRepository;
     }
 
-    public Page<Vehicle> findAll(PageRequest of) {
-        return vehiclesRepository.findAll(of.withSort(Sort.by("id")));
-    }
 
-    public List<Vehicle> findAllByManager(PageRequest of) {
+    public List<Vehicle> findAll(PageRequest of) {
         var authentication = SecurityContextHolder.getContext()
                                                   .getAuthentication();
         Manager manager = (Manager) authentication.getPrincipal();
