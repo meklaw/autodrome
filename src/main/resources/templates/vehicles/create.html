@@ -1,40 +1,45 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Create Vehicle</title>
+    <meta charset="UTF-8">
+    <title>Create Vehicle</title>
 </head>
 <body>
 <h1>Create Vehicle</h1>
 <!--/*@thymesVar id="vehicle" type="ru.meklaw.autodrome.dto.VehicleDTO"*/-->
 <form th:action="@{/vehicles}" th:object="${vehicle}" method="post">
-  <input type="hidden" th:field="*{id}"/>
+    <input type="hidden" th:field="*{id}"/>
 
-  <label for="number">Number:</label>
-  <input type="text" th:field="*{number}" id="number"/><br/>
+    <label for="number">Number:</label>
+    <input type="text" th:field="*{number}" id="number"/><br/>
 
-  <label for="cost">Cost:</label>
-  <input type="number" th:field="*{cost}" id="cost"/><br/>
+    <label for="cost">Cost:</label>
+    <input type="number" th:field="*{cost}" id="cost"/><br/>
 
-  <label for="yearOfProduction">Year of Production:</label>
-  <input type="number" th:field="*{yearOfProduction}" id="yearOfProduction"/><br/>
+    <label for="yearOfProduction">Year of Production:</label>
+    <input type="number" th:field="*{yearOfProduction}" id="yearOfProduction"/><br/>
 
-  <label for="mileage">Mileage:</label>
-  <input type="number" th:field="*{mileage}" id="mileage"/><br/>
+    <label for="mileage">Mileage:</label>
+    <input type="number" th:field="*{mileage}" id="mileage"/><br/>
 
-  <label for="brand">Brand:</label>
-  <select th:field="*{vehicleBrandId}" id="brand">
-    <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
-  </select><br/>
+    <label for="brand">Brand:</label>
+    <select th:field="*{vehicleBrandId}" id="brand">
+        <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+    </select><br/>
 
-  <label for="enterprise">Enterprise:</label>
-  <select th:field="*{enterpriseId}" id="enterprise">
-    <option th:each="enterprise : ${enterprises}" th:value="${enterprise.id}" th:text="${enterprise.name}"></option>
-  </select><br/>
+    <input th:if="${enterprises == null}" type="hidden" th:field="*{enterpriseId}"/>
 
-  <input type="submit" value="Save"/>
+    <th:block th:if="${enterprises}">
+        <label for="enterprise">Enterprise:</label>
+        <select th:field="*{enterpriseId}" id="enterprise">
+            <option th:each="enterprise : ${enterprises}" th:value="${enterprise.id}"
+                    th:text="${enterprise.name}"></option>
+        </select><br/>
+    </th:block>
+
+    <input type="submit" value="Save"/>
 </form>
-<br />
+<br/>
 <a th:href="@{/vehicles}" th:text="'Back to all vehicles'"></a>
 </body>
 </html>
