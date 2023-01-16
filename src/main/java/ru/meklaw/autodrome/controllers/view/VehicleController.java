@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.controllers.rest.EnterpriseRestController;
 import ru.meklaw.autodrome.controllers.rest.VehicleRestController;
 import ru.meklaw.autodrome.dto.VehicleDTO;
-import ru.meklaw.autodrome.models.Vehicle;
 import ru.meklaw.autodrome.service.VehicleBrandsService;
 
 
@@ -26,18 +25,31 @@ public class VehicleController {
     }
 
     @GetMapping
-    public String index(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "-1") long enterprise_id, Model model) {
-
+    public String index(@RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "20") int size,
+                        @RequestParam(defaultValue = "-1") long enterprise_id, Model model) {
         model.addAttribute("vehicles", vehicleRestController.index(page, size, enterprise_id));
+
+        if (enterprise_id != -1) {
+            model.addAttribute("enterprise", enterpriseRestController.findById(enterprise_id));
+        }
 
         return "/vehicles/index";
     }
 
     @GetMapping("/create")
-    public String create(Model model) {
-        model.addAttribute("vehicle", new Vehicle());
+    public String create(@RequestParam(defaultValue = "-1") long enterprise_id,
+                         Model model) {
+        VehicleDTO dto = new VehicleDTO();
+
+        if (enterprise_id != -1) {
+            dto.setEnterpriseId(enterprise_id);
+        } else {
+            model.addAttribute("enterprises", enterpriseRestController.index());
+        }
+
+        model.addAttribute("vehicle", dto);
         model.addAttribute("brands", vehicleBrandsService.findAll());
-        model.addAttribute("enterprises", enterpriseRestController.index());
 
         return "/vehicles/create";
     }

@@ -5,7 +5,8 @@
     <title>Vehicles</title>
 </head>
 <body>
-<p>Vehicles:</p>
+<p th:if="${enterprise == null}">Vehicles:</p>
+<p th:if="${enterprise}" th:text="'Vehicles for enterprise ' + ${enterprise.getName()} + ':'"></p>
 <!--/*@thymesVar id="vehicle" type="ru.meklaw.autodrome.dto.VehicleDTO"*/-->
 <div th:each="vehicle : ${vehicles}">
     <a th:href="@{/vehicles/{id}(id=${vehicle.id})}"
