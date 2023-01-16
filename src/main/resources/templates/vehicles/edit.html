@@ -18,12 +18,14 @@
   <label>Mileage:</label>
   <input type="number" th:field="*{mileage}" /><br />
   <label>Brand:</label>
-  <select th:field="*{brand.id}">
-    <!-- Use th:each to loop through the list of brands -->
+  <select th:field="*{vehicleBrandId}">
     <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+  </select><br />
+  <select th:field="*{enterpriseId}">
+    <option th:each="enterprise : ${enterprises}" th:value="${enterprise.id}" th:text="${enterprise.name}"></option>
   </select><br />
   <input type="submit" value="Save" />
 </form>
-<a th:href="@{/vehicles}" th:text="'Back to index'"></a>
+<a th:href="@{/vehicles}" th:text="'Back to all vehicles'"></a>
 </body>
 </html>
