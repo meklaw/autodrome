@@ -26,11 +26,26 @@ public class VehicleRestController {
 
     @GetMapping
     public List<VehicleDTO> index(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "20") int size) {
+                                  @RequestParam(defaultValue = "20") int size,
+                                  @RequestParam(defaultValue = "-1") long enterprise_id) {
+
+
+        if (enterprise_id != -1)
+            return vehiclesService.findAllByEnterprise(enterprise_id, PageRequest.of(page, size))
+                                  .stream()
+                                  .map(this::convertToVehicleDTO)
+                                  .toList();
+
         return vehiclesService.findAll(PageRequest.of(page, size))
                               .stream()
                               .map(this::convertToVehicleDTO)
                               .toList();
+    }
+
+    @GetMapping("/{id}")
+    public VehicleDTO findById(@PathVariable long id) {
+        return convertToVehicleDTO(vehiclesService.findById(id)
+                                                  .orElseThrow());
     }
 
     @PostMapping
