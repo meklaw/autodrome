@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Enterprise</title>
+</head>
+<body>
+<div th:text="'ID: ' + ${enterprise.id}"></div>
+<div th:text="'Name: ' + ${enterprise.name}"></div>
+<div th:text="'City: ' + ${enterprise.city}"></div>
+<div th:text="'Founded: ' + ${enterprise.founded.toString()}"></div>
+
+
+<br/>
+<a th:href="@{/vehicles(enterprise_id=${enterprise.id})}" th:text="'Vehicles for this Enterprise'"></a>
+
+</body>
+</html>
