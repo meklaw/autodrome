@@ -7,31 +7,31 @@
 <body>
 <h1>Edit Vehicle</h1>
 <form th:action="@{/vehicles/{id}(id=${vehicle.id})}" th:object="${vehicle}" th:method="PUT">
-  <input type="hidden" th:field="*{id}" />
+  <input type="hidden" th:field="*{id}"/>
 
-  <label>Number:</label>
-  <input type="text" th:field="*{number}" /><br />
+  <label for="number">Number:</label>
+  <input type="text" th:field="*{number}" id="number"/><br/>
 
-  <label>Cost:</label>
-  <input type="number" th:field="*{cost}" /><br />
+  <label for="cost">Cost:</label>
+  <input type="number" th:field="*{cost}" id="cost"/><br/>
 
-  <label>Year of Production:</label>
-  <input type="number" th:field="*{yearOfProduction}" /><br />
+  <label for="yearOfProduction">Year of Production:</label>
+  <input type="number" th:field="*{yearOfProduction}" id="yearOfProduction"/><br/>
 
-  <label>Mileage:</label>
-  <input type="number" th:field="*{mileage}" /><br />
+  <label for="mileage">Mileage:</label>
+  <input type="number" th:field="*{mileage}" id="mileage"/><br/>
 
-  <label>Brand:</label>
-  <select th:field="*{vehicleBrandId}">
+  <label for="brand">Brand:</label>
+  <select th:field="*{vehicleBrandId}" id="brand">
     <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
-  </select><br />
+  </select><br/>
 
-  <label>Enterprise:</label>
-  <select th:field="*{enterpriseId}">
+  <label for="enterprise">Enterprise:</label>
+  <select th:field="*{enterpriseId}" id="enterprise">
     <option th:each="enterprise : ${enterprises}" th:value="${enterprise.id}" th:text="${enterprise.name}"></option>
-  </select><br />
+  </select><br/>
 
-  <input type="submit" value="Save" />
+  <input type="submit" value="Save"/>
 </form>
 <a th:href="@{/vehicles}" th:text="'Back to all vehicles'"></a>
 </body>
