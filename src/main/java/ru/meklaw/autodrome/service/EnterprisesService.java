@@ -39,6 +39,10 @@ public class EnterprisesService {
 
         return enterprisesRepository.findAllByManagersIn(Collections.singleton(manager));
     }
+    @Transactional
+    public Enterprise findById(long id) {
+        return enterprisesRepository.findById(id).orElseThrow();
+    }
 
 
     @Transactional

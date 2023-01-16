@@ -31,6 +31,11 @@ public class EnterpriseRestController {
                                  .toList();
     }
 
+    @GetMapping("/{id}")
+    public EnterpriseDTO findById(@PathVariable long id) {
+        return convertToEnterpriseDTO(enterprisesService.findById(id));
+    }
+
     @PostMapping("/init")
     public List<EnterpriseDTO> init(@RequestBody List<FillEnterprisesDTO> enterprises) {
         return enterprisesService.init(enterprises)
