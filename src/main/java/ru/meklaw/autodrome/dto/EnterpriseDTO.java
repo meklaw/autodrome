@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Getter
@@ -18,7 +17,5 @@ public class EnterpriseDTO {
     private String name;
     private String city;
     private LocalDate founded;
-    private List<VehicleDTO> vehicles;
-    private List<DriverDTO> drivers;
 }
 
