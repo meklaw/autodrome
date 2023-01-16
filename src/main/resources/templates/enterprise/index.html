@@ -7,16 +7,12 @@
 <body>
 <p>Enterprise List</p>
 <div th:each="enterprise : ${enterprises}">
-    <div th:text="'ID: ' + ${enterprise.id}"></div>
-    <div th:text="'Name: ' + ${enterprise.name}"></div>
-    <div th:text="'City: ' + ${enterprise.city}"></div>
-    <div th:text="'Founded: ' + ${enterprise.founded.toString()}"></div>
-
-    <br>
+    <a th:href="@{/enterprise/{id}(id=${enterprise.id})}"
+       th:text="'ID: ' + ${enterprise.id} + ', Name: ' + ${enterprise.name} + ', City: ' + ${enterprise.city} + ', Founded: ' + ${enterprise.founded.toString()}"></a>
 </div>
 <br/>
-<a th:href="@{/vehicles}" th:text="'Vehicles'"></a>
+<a th:href="@{/vehicles}" th:text="Vehicles"></a>
 <br/>
-<a th:href="@{/brands}" th:text="'Brands'"></a>
+<a th:href="@{/brands}" th:text="Brands"></a>
 </body>
 </html>
