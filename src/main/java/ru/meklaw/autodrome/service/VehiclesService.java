@@ -35,10 +35,11 @@ public class VehiclesService {
                                                   .getAuthentication();
         Manager manager = (Manager) authentication.getPrincipal();
 
-        return vehiclesRepository.findAllByEnterprise_ManagersIn(
-                Collections.singleton(manager),
-                of.withSort(Sort.by("id"))
-        );
+        return vehiclesRepository.findAllByEnterprise_ManagersIn(Collections.singleton(manager), of.withSort(Sort.by("id")));
+    }
+
+    public List<Vehicle> findAllByEnterprise(long id, PageRequest of) {
+        return vehiclesRepository.findAllByEnterpriseId(id, of.withSort(Sort.by("id")));
     }
 
     public void create(Vehicle vehicle) {

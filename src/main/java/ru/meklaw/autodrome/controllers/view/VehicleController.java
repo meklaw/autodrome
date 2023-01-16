@@ -25,8 +25,14 @@ public class VehicleController {
     @GetMapping
     public String index(@RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "20") int size,
+                        @RequestParam(defaultValue = "-1") long enterprise_id,
                         Model model) {
-        model.addAttribute("vehicles", vehiclesService.findAll(PageRequest.of(page, size)));
+
+        if (enterprise_id == -1)
+            model.addAttribute("vehicles", vehiclesService.findAll(PageRequest.of(page, size)));
+
+        if (enterprise_id != -1)
+            model.addAttribute("vehicles", vehiclesService.findAllByEnterprise(enterprise_id, PageRequest.of(page, size)));
 
         return "/vehicles/index";
     }
