@@ -7,7 +7,7 @@
 <body>
 <p>Enterprise List</p>
 <div th:each="enterprise : ${enterprises}">
-    <a th:href="@{/enterprise/{id}(id=${enterprise.id})}"
+    <a th:href="@{/enterprises/{id}(id=${enterprise.id})}"
        th:text="'ID: ' + ${enterprise.id} + ', Name: ' + ${enterprise.name} + ', City: ' + ${enterprise.city} + ', Founded: ' + ${enterprise.founded.toString()}"></a>
 </div>
 <br/>
