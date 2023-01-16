@@ -7,33 +7,33 @@
 <body>
 <h1>Create Vehicle</h1>
 <!--/*@thymesVar id="vehicle" type="ru.meklaw.autodrome.dto.VehicleDTO"*/-->
-<form th:action="@{/vehicles}" th:object="${vehicle}" method="post">
-    <input type="hidden" th:field="*{id}"/>
+<form method="post" th:action="@{/vehicles}" th:object="${vehicle}">
+    <input th:field="*{id}" type="hidden"/>
 
     <label for="number">Number:</label>
-    <input type="text" th:field="*{number}" id="number"/><br/>
+    <input id="number" th:field="*{number}" type="text"/><br/>
 
     <label for="cost">Cost:</label>
-    <input type="number" th:field="*{cost}" id="cost"/><br/>
+    <input id="cost" th:field="*{cost}" type="number"/><br/>
 
     <label for="yearOfProduction">Year of Production:</label>
-    <input type="number" th:field="*{yearOfProduction}" id="yearOfProduction"/><br/>
+    <input id="yearOfProduction" th:field="*{yearOfProduction}" type="number"/><br/>
 
     <label for="mileage">Mileage:</label>
-    <input type="number" th:field="*{mileage}" id="mileage"/><br/>
+    <input id="mileage" th:field="*{mileage}" type="number"/><br/>
 
     <label for="brand">Brand:</label>
-    <select th:field="*{vehicleBrandId}" id="brand">
-        <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+    <select id="brand" th:field="*{vehicleBrandId}">
+        <option th:each="brand : ${brands}" th:text="${brand.name}" th:value="${brand.id}"></option>
     </select><br/>
 
-    <input th:if="${enterprises == null}" type="hidden" th:field="*{enterpriseId}"/>
+    <input th:field="*{enterpriseId}" th:if="${enterprises == null}" type="hidden"/>
 
     <th:block th:if="${enterprises}">
         <label for="enterprise">Enterprise:</label>
-        <select th:field="*{enterpriseId}" id="enterprise">
-            <option th:each="enterprise : ${enterprises}" th:value="${enterprise.id}"
-                    th:text="${enterprise.name}"></option>
+        <select id="enterprise" th:field="*{enterpriseId}">
+            <option th:each="enterprise : ${enterprises}" th:text="${enterprise.name}"
+                    th:value="${enterprise.id}"></option>
         </select><br/>
     </th:block>
 
