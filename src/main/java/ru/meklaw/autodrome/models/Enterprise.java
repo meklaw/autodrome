@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,8 @@ public class Enterprise {
 
     @Column(name = "founded")
     private LocalDate founded;
+    @Column(name = "time_zone")
+    private ZoneId timeZone;
 
 
     @OneToMany(mappedBy = "enterprise")

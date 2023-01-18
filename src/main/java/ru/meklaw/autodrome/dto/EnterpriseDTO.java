@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 
 @Getter
@@ -17,5 +18,6 @@ public class EnterpriseDTO {
     private String name;
     private String city;
     private LocalDate founded;
+    private ZoneId timeZone;
 }
 
