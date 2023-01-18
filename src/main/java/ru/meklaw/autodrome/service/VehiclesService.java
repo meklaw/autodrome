@@ -12,9 +12,10 @@ import ru.meklaw.autodrome.repositories.EnterprisesRepository;
 import ru.meklaw.autodrome.repositories.VehicleBrandRepository;
 import ru.meklaw.autodrome.repositories.VehiclesRepository;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VehiclesService {
@@ -30,7 +31,14 @@ public class VehiclesService {
     }
 
 
-    public List<Vehicle> findAll(PageRequest of) {
+    public List<Vehicle> findAll(long enterpriseId, PageRequest of) {
+        if (enterpriseId != -1)
+            return findAllByEnterprise(enterpriseId, of);
+
+        return findAll(of);
+    }
+
+    List<Vehicle> findAll(PageRequest of) {
         var authentication = SecurityContextHolder.getContext()
                                                   .getAuthentication();
         Manager manager = (Manager) authentication.getPrincipal();
@@ -38,16 +46,19 @@ public class VehiclesService {
         return vehiclesRepository.findAllByEnterprise_ManagersIn(Collections.singleton(manager), of.withSort(Sort.by("id")));
     }
 
-    public List<Vehicle> findAllByEnterprise(long id, PageRequest of) {
+    List<Vehicle> findAllByEnterprise(long id, PageRequest of) {
         return vehiclesRepository.findAllByEnterpriseId(id, of.withSort(Sort.by("id")));
     }
 
     public void create(Vehicle vehicle) {
+        if (vehicle.getBuyDateTimeUtc() == null)
+            vehicle.setBuyDateTimeUtc(ZonedDateTime.now(ZoneId.of("UTC")));
         vehiclesRepository.save(vehicle);
     }
 
-    public Optional<Vehicle> findById(long id) {
-        return vehiclesRepository.findById(id);
+    public Vehicle findById(long id) {
+        return vehiclesRepository.findById(id)
+                                 .orElseThrow();
     }
 
     public void update(long id, Vehicle vehicle) {
