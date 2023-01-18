@@ -9,8 +9,9 @@ import ru.meklaw.autodrome.models.*;
 import ru.meklaw.autodrome.repositories.DriverRepository;
 import ru.meklaw.autodrome.repositories.EnterprisesRepository;
 import ru.meklaw.autodrome.repositories.VehicleBrandRepository;
-import ru.meklaw.autodrome.repositories.VehiclesRepository;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,14 +21,14 @@ import java.util.Random;
 public class EnterprisesService {
     private final EnterprisesRepository enterprisesRepository;
     private final VehicleBrandRepository vehicleBrandRepository;
-    private final VehiclesRepository vehiclesRepository;
+    private final VehiclesService vehiclesService;
     private final DriverRepository driverRepository;
 
     @Autowired
-    public EnterprisesService(EnterprisesRepository enterprisesRepository, VehicleBrandRepository vehicleBrandRepository, VehiclesRepository vehiclesRepository, DriverRepository driverRepository) {
+    public EnterprisesService(EnterprisesRepository enterprisesRepository, VehicleBrandRepository vehicleBrandRepository, VehiclesService vehiclesService, DriverRepository driverRepository) {
         this.enterprisesRepository = enterprisesRepository;
         this.vehicleBrandRepository = vehicleBrandRepository;
-        this.vehiclesRepository = vehiclesRepository;
+        this.vehiclesService = vehiclesService;
         this.driverRepository = driverRepository;
     }
 
@@ -39,9 +40,11 @@ public class EnterprisesService {
 
         return enterprisesRepository.findAllByManagersIn(Collections.singleton(manager));
     }
+
     @Transactional
     public Enterprise findById(long id) {
-        return enterprisesRepository.findById(id).orElseThrow();
+        return enterprisesRepository.findById(id)
+                                    .orElseThrow();
     }
 
 
@@ -68,6 +71,7 @@ public class EnterprisesService {
             vehicle.setCost(random.nextInt(10000));
             vehicle.setYearOfProduction(random.nextInt(2023 - 1900 + 1) + 1900);
             vehicle.setMileage(random.nextInt(100000));
+            vehicle.setBuyDateTimeUtc(ZonedDateTime.now(ZoneId.of("UTC")));
 
             vehicle.setBrand(brands.get(i % brands.size()));
             brands.get(i % brands.size())
@@ -94,7 +98,7 @@ public class EnterprisesService {
                    .add(driver);
 
             driverRepository.save(driver);
-            vehiclesRepository.save(vehicle);
+            vehiclesService.create(vehicle);
         }
 
     }
