@@ -7,20 +7,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.VehicleDTO;
+import ru.meklaw.autodrome.models.Enterprise;
 import ru.meklaw.autodrome.models.Vehicle;
+import ru.meklaw.autodrome.service.EnterprisesService;
 import ru.meklaw.autodrome.service.VehiclesService;
 
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicles")
 public class VehicleRestController {
     private final VehiclesService vehiclesService;
+    private final EnterprisesService enterprisesService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public VehicleRestController(VehiclesService vehiclesService, ModelMapper modelMapper) {
+    public VehicleRestController(VehiclesService vehiclesService, EnterprisesService enterprisesService, ModelMapper modelMapper) {
         this.vehiclesService = vehiclesService;
+        this.enterprisesService = enterprisesService;
         this.modelMapper = modelMapper;
     }
 
@@ -29,15 +34,36 @@ public class VehicleRestController {
                                   @RequestParam(defaultValue = "20") int size,
                                   @RequestParam(defaultValue = "-1") long enterprise_id) {
 
-        return vehiclesService.findAll(enterprise_id, PageRequest.of(page, size))
-                              .stream()
-                              .map(this::convertToVehicleDTO)
-                              .toList();
+        List<VehicleDTO> vehicles = vehiclesService.findAll(enterprise_id, PageRequest.of(page, size))
+                                                   .stream()
+                                                   .map(this::convertToVehicleDTO)
+                                                   .toList();
+
+
+        if (enterprise_id != -1) {
+            Enterprise enterprise = enterprisesService.findById(enterprise_id);
+
+            vehicles.forEach(vehicle -> setWithZoneSameInstant(vehicle, enterprise.getTimeZone()));
+
+            return vehicles;
+        }
+
+        vehicles.forEach(vehicle -> setWithZoneSameInstant(vehicle, ZoneId.systemDefault()));
+
+        return vehicles;
+    }
+
+    private void setWithZoneSameInstant(VehicleDTO vehicle, ZoneId zoneId) {
+        vehicle.setBuyDateTimeUtc(vehicle.getBuyDateTimeUtc()
+                                         .withZoneSameInstant(zoneId));
     }
 
     @GetMapping("/{id}")
     public VehicleDTO findById(@PathVariable long id) {
-        return convertToVehicleDTO(vehiclesService.findById(id));
+        VehicleDTO dto = convertToVehicleDTO(vehiclesService.findById(id));
+        setWithZoneSameInstant(dto, ZoneId.systemDefault());
+
+        return dto;
     }
 
     @PostMapping
