@@ -9,6 +9,7 @@
 <!--/*@thymesVar id="vehicle" type="ru.meklaw.autodrome.dto.VehicleDTO"*/-->
 <form method="post" th:action="@{/vehicles}" th:object="${vehicle}">
     <input th:field="*{id}" type="hidden"/>
+    <input th:field="*{buyDateTimeUtc}" type="hidden"/>
 
     <label for="number">Number:</label>
     <input id="number" th:field="*{number}" type="text"/><br/>
