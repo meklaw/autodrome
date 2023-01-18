@@ -13,6 +13,7 @@
 <p th:text="'Mileage: ' + ${vehicle.mileage}"></p>
 <p th:text="'Brand: ' + ${vehicle.vehicleBrandId}"></p>
 <p th:text="'Enterprise: ' + ${vehicle.enterpriseId}"></p>
+<p th:text="'Buy date time (local): ' + ${vehicle.buyDateTimeUtc.toLocalDateTime().toString()}"></p>
 
 <br/>
 <a th:href="@{/vehicles/{id}/edit(id=${vehicle.id})}" th:text="'Edit'"></a>

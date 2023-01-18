@@ -10,7 +10,7 @@
 <!--/*@thymesVar id="vehicle" type="ru.meklaw.autodrome.dto.VehicleDTO"*/-->
 <div th:each="vehicle : ${vehicles}">
     <a th:href="@{/vehicles/{id}(id=${vehicle.id})}"
-       th:text="'ID: ' + ${vehicle.id} + ', Number: ' + ${vehicle.number} + ', Cost: ' + ${vehicle.cost} + ', Year of Production: ' + ${vehicle.yearOfProduction} + ', Mileage: ' + ${vehicle.mileage} + ', Brand: ' + ${vehicle.vehicleBrandId}"></a>
+       th:text="'ID: ' + ${vehicle.id} + ', Number: ' + ${vehicle.number} + ', Cost: ' + ${vehicle.cost} + ', Year of Production: ' + ${vehicle.yearOfProduction} + ', Mileage: ' + ${vehicle.mileage} + ', Brand: ' + ${vehicle.vehicleBrandId} + ', Buy date time: ' + ${vehicle.buyDateTimeUtc.toLocalDateTime().toString()}"></a>
 </div>
 <br/>
 
