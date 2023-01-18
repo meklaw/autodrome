@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,4 +19,5 @@ public class VehicleDTO {
     private int mileage;
     private Long vehicleBrandId;
     private Long enterpriseId;
+    private ZonedDateTime buyDateTimeUtc;
 }

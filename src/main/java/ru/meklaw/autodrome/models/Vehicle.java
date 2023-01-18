@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
@@ -28,6 +29,8 @@ public class Vehicle {
     @Column(name = "mileage")
     private int mileage;
 
+    @Column(name = "buy_date_time_utc")
+    private ZonedDateTime buyDateTimeUtc;
     @ManyToOne
     @JoinColumn(name = "brand_id", referencedColumnName = "id")
     private VehicleBrand brand;
