@@ -10,12 +10,13 @@
 <!--/*@thymesVar id="vehicle" type="ru.meklaw.autodrome.dto.VehicleDTO"*/-->
 <div th:each="vehicle : ${vehicles}">
     <a th:href="@{/vehicles/{id}(id=${vehicle.id})}"
-       th:text="'ID: ' + ${vehicle.id} + ', Number: ' + ${vehicle.number} + ', Cost: ' + ${vehicle.cost} + ', Year of Production: ' + ${vehicle.yearOfProduction} + ', Mileage: ' + ${vehicle.mileage} + ', Brand: ' + ${vehicle.vehicleBrandId} + ', Buy date time: ' + ${vehicle.buyDateTimeUtc.toLocalDateTime().toString()}"></a>
+       th:text="'ID: ' + ${vehicle.id} + ', Number: ' + ${vehicle.number} + ', Cost: ' + ${vehicle.cost} + ', Year of Production: ' + ${vehicle.yearOfProduction} + ', Mileage: ' + ${vehicle.mileage} + ', Brand: ' + ${vehicle.vehicleBrandId} + ', Buy date time: ' + ${vehicle.buyDateTimeUtc.toString()}"></a>
 </div>
 <br/>
 
 <a th:if="${enterprise == null}" th:href="@{/vehicles/create}" th:text="'Create new vehicle'"></a>
 <a th:if="${enterprise}" th:href="@{/vehicles/create(enterprise_id=${enterprise.id})}" th:text="'Create new vehicle'"></a>
+<a th:if="${enterprise}" th:href="@{/vehicles}" th:text="'All vehicles'"></a>
 
 <br/>
 <a th:href="@{/brands}" th:text="'Brands'"></a>
