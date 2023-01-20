@@ -14,15 +14,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Manager extends Person{
-//    @Id
-//    @Column(name = "id")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-
-//    @OneToOne
-//    @JoinColumn(name = "person_id")
-//    private Person person;
-
     @ManyToMany()
     @JoinTable(
             name = "enterprise_manager",
@@ -30,28 +21,4 @@ public class Manager extends Person{
             inverseJoinColumns = @JoinColumn(name = "enterprise_id")
     )
     private List<Enterprise> enterprises;
-
-//    public Manager(Person person) {
-//        this.person = person;
-//    }
-
-//    public String getUsername() {
-//        return person.getUsername();
-//    }
-//
-//    public void setUsername(String username) {
-//        person.setUsername(username);
-//    }
-//
-//    public String getPassword() {
-//        return person.getPassword();
-//    }
-//
-//    public void setPassword(String password) {
-//        person.setPassword(password);
-//    }
-//
-//    public String getRole() {
-//        return person.getRole();
-//    }
 }
