@@ -47,4 +47,8 @@ public class Vehicle {
     public ZonedDateTime getBuyDateTimeUtc() {
         return buyDateTimeUtc.withZoneSameLocal(ZoneId.of("UTC"));
     }
+
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    private List<GpsPoint> points;
+
 }
