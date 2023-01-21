@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface GpsPointRepository extends JpaRepository<GpsPoint, Long> {
-    List<GpsPoint> findAllById(long vehicleId);
+    List<GpsPoint> findAllByVehicleId(long vehicleId);
 }
