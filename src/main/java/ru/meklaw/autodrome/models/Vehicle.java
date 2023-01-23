@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -43,10 +42,6 @@ public class Vehicle {
     //    TODO remove CascadeType and change database to SET NULL when delete
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
     private List<Driver> drivers;
-
-    public ZonedDateTime getBuyDateTimeUtc() {
-        return buyDateTimeUtc.withZoneSameLocal(ZoneId.of("UTC"));
-    }
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
     private List<GpsPoint> points;
