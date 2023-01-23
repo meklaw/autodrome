@@ -25,7 +25,7 @@ public class GpsPoint {
     private Vehicle vehicle;
 
     @Column(name = "date_time")
-    private ZonedDateTime date_time;
+    private ZonedDateTime dateTime;
 
     @Column(name = "x")
     private double x;
