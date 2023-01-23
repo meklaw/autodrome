@@ -25,15 +25,28 @@ public class GpsPointService {
     }
 
     @Transactional(readOnly = true)
-    public List<GpsPoint> findAll(long vehicleId, Optional<ZonedDateTime> start, Optional<ZonedDateTime> end) {
-        if (vehicleId != -1 && start.isPresent() && end.isPresent())
-            return gpsPointRepository.findAllByVehicleIdAndDateTimeBetweenOrderByDateTimeAsc(vehicleId, start.get(), end.get());
+    public List<GpsPoint> findAll(long vehicleId, Optional<ZonedDateTime> startTime, Optional<ZonedDateTime> endTime) {
+        List<GpsPoint> points = find(vehicleId, startTime, endTime);
+        for (GpsPoint point : points) {
+            point.setDateTime(point.getDateTime()
+                                   .withZoneSameInstant(point.getVehicle()
+                                                             .getEnterprise()
+                                                             .getTimeZone()));
+        }
 
-        if (vehicleId != -1 && start.isPresent())
-            return gpsPointRepository.findAllByVehicleIdAndDateTimeAfterOrderByDateTimeAsc(vehicleId, start.get());
+        return points;
+    }
 
-        if (vehicleId != -1 && end.isPresent())
-            return gpsPointRepository.findAllByVehicleIdAndDateTimeBeforeOrderByDateTimeAsc(vehicleId, end.get());
+    @Transactional(readOnly = true)
+    List<GpsPoint> find(long vehicleId, Optional<ZonedDateTime> startTime, Optional<ZonedDateTime> endTime) {
+        if (vehicleId != -1 && startTime.isPresent() && endTime.isPresent())
+            return gpsPointRepository.findAllByVehicleIdAndDateTimeBetweenOrderByDateTimeAsc(vehicleId, startTime.get(), endTime.get());
+
+        if (vehicleId != -1 && startTime.isPresent())
+            return gpsPointRepository.findAllByVehicleIdAndDateTimeAfterOrderByDateTimeAsc(vehicleId, startTime.get());
+
+        if (vehicleId != -1 && endTime.isPresent())
+            return gpsPointRepository.findAllByVehicleIdAndDateTimeBeforeOrderByDateTimeAsc(vehicleId, endTime.get());
 
         if (vehicleId != -1)
             return gpsPointRepository.findAllByVehicleIdOrderByDateTimeAsc(vehicleId);
