@@ -48,7 +48,7 @@ public class VehicleRestController {
             return vehicles;
         }
 
-        vehicles.forEach(vehicle -> setWithZoneSameInstant(vehicle, ZoneId.systemDefault()));
+        vehicles.forEach(vehicle -> setWithZoneSameInstant(vehicle, ZoneId.of("Europe/Moscow")));
 
         return vehicles;
     }
