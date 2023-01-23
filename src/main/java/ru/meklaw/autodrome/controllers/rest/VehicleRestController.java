@@ -47,7 +47,7 @@ public class VehicleRestController {
 
             return vehicles;
         }
-
+//        TODO take timezone of manager and move this logic to service
         vehicles.forEach(vehicle -> setWithZoneSameInstant(vehicle, ZoneId.of("Europe/Moscow")));
 
         return vehicles;
