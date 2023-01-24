@@ -17,4 +17,10 @@ public interface GpsPointRepository extends JpaRepository<GpsPoint, Long> {
 
     List<GpsPoint> findAllByVehicleIdAndDateTimeBeforeOrderByDateTimeAsc(long vehicleId, ZonedDateTime timeEnd);
 
+    List<GpsPoint> findAllByDateTimeBetweenOrderByDateTimeAsc(ZonedDateTime timeStart, ZonedDateTime timeEnd);
+
+    List<GpsPoint> findAllByDateTimeAfterOrderByDateTimeAsc(ZonedDateTime timeStart);
+
+    List<GpsPoint> findAllByDateTimeBeforeOrderByDateTimeAsc(ZonedDateTime timeEnd);
+
 }

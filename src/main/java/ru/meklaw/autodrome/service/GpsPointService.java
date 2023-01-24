@@ -51,6 +51,14 @@ public class GpsPointService {
         if (vehicleId != -1)
             return gpsPointRepository.findAllByVehicleIdOrderByDateTimeAsc(vehicleId);
 
+        if (startTime.isPresent() && endTime.isPresent())
+            return gpsPointRepository.findAllByDateTimeBetweenOrderByDateTimeAsc(startTime.get(), endTime.get());
+
+        if (startTime.isPresent())
+            return gpsPointRepository.findAllByDateTimeAfterOrderByDateTimeAsc(startTime.get());
+
+        if (endTime.isPresent())
+            return gpsPointRepository.findAllByDateTimeBeforeOrderByDateTimeAsc(endTime.get());
 
         return gpsPointRepository.findAll();
     }
