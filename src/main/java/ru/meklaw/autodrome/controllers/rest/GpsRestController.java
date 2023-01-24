@@ -46,8 +46,8 @@ public class GpsRestController {
 
     @GetMapping("/trip")
     public Object indexTrip(@RequestParam() long vehicle_id,
-                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_start,
-                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_end,
+                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_start,
+                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_end,
                             @RequestParam(defaultValue = "false") boolean geoJSON) {
         List<GpsPointDTO> gpsPoints = tripService.findAllPoints(vehicle_id, time_start, time_end)
                                                  .stream()
