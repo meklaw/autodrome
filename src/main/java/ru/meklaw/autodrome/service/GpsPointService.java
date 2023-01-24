@@ -63,12 +63,13 @@ public class GpsPointService {
         return gpsPointRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public GpsPoint findById(long id) {
         return gpsPointRepository.findById(id)
                                  .orElseThrow();
     }
 
-    @Transactional()
+    @Transactional
     public void init() {
         List<Vehicle> vehicles = vehiclesRepository.findAll();
         for (int i = 0; i < 100; i++) {
