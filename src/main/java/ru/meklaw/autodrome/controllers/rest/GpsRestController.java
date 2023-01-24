@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
 import ru.meklaw.autodrome.models.GpsPoint;
 import ru.meklaw.autodrome.service.GpsPointService;
+import ru.meklaw.autodrome.service.TripService;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -14,29 +15,47 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/gps")
-public class GpsPointRestController {
+public class GpsRestController {
 
     private final ModelMapper modelMapper;
     private final GpsPointService gpsPointService;
+    private final TripService tripService;
 
     @Autowired
-    public GpsPointRestController(ModelMapper modelMapper, GpsPointService gpsPointService) {
+    public GpsRestController(ModelMapper modelMapper, GpsPointService gpsPointService, TripService tripService) {
         this.modelMapper = modelMapper;
         this.gpsPointService = gpsPointService;
+        this.tripService = tripService;
     }
 
     @GetMapping
-    public Object index(
-            @RequestParam(defaultValue = "-1") long vehicle_id,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_end,
-            @RequestParam(defaultValue = "false") boolean geoJSON) {
+    public Object index(@RequestParam(defaultValue = "-1") long vehicle_id,
+                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_start,
+                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_end,
+                        @RequestParam(defaultValue = "false") boolean geoJSON) {
         List<GpsPointDTO> gpsPoints = gpsPointService.findAll(vehicle_id, time_start, time_end)
                                                      .stream()
                                                      .map(this::convertToGpsPointDTO)
                                                      .collect(Collectors.toList());
-        if (geoJSON)
+        if (geoJSON) {
             return convertToGeoJSON(gpsPoints);
+        }
+
+        return gpsPoints;
+    }
+
+    @GetMapping("/trip")
+    public Object indexTrip(@RequestParam(defaultValue = "-1") long vehicle_id,
+                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_start,
+                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_end,
+                            @RequestParam(defaultValue = "false") boolean geoJSON) {
+        List<GpsPointDTO> gpsPoints = tripService.findAllPoints(vehicle_id, time_start, time_end)
+                                                 .stream()
+                                                 .map(this::convertToGpsPointDTO)
+                                                 .collect(Collectors.toList());
+        if (geoJSON) {
+            return convertToGeoJSON(gpsPoints);
+        }
 
         return gpsPoints;
     }
