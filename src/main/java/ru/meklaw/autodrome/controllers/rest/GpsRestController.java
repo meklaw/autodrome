@@ -45,7 +45,7 @@ public class GpsRestController {
     }
 
     @GetMapping("/trip")
-    public Object indexTrip(@RequestParam(defaultValue = "-1") long vehicle_id,
+    public Object indexTrip(@RequestParam() long vehicle_id,
                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_start,
                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_end,
                             @RequestParam(defaultValue = "false") boolean geoJSON) {
