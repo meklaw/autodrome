@@ -35,12 +35,10 @@ public class GpsPointRestController {
                                                      .stream()
                                                      .map(this::convertToGpsPointDTO)
                                                      .collect(Collectors.toList());
-
-        if (geoJSON) {
+        if (geoJSON)
             return convertToGeoJSON(gpsPoints);
-        } else {
-            return gpsPoints;
-        }
+
+        return gpsPoints;
     }
 
 
