@@ -17,5 +17,4 @@ public class GpsTripDTO {
     ZonedDateTime endDateTime;
     GpsPointDTO startPoint;
     GpsPointDTO endPoint;
-    String address;
 }
