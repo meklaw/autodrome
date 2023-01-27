@@ -11,7 +11,9 @@ import java.util.List;
 public interface GpsPointRepository extends JpaRepository<GpsPoint, Long> {
     List<GpsPoint> findAllByVehicleIdOrderByDateTimeAsc(long vehicleId);
 
-    List<GpsPoint> findAllByVehicleIdAndDateTimeBetweenOrderByDateTimeAsc(long vehicleId, ZonedDateTime timeStart, ZonedDateTime timeEnd);
+    List<GpsPoint> findAllByVehicleIdAndDateTimeBetweenOrderByDateTimeAsc(long vehicleId,
+                                                                          ZonedDateTime timeStart,
+                                                                          ZonedDateTime timeEnd);
 
     List<GpsPoint> findAllByVehicleIdAndDateTimeAfterOrderByDateTimeAsc(long vehicleId, ZonedDateTime timeStart);
 
@@ -22,5 +24,4 @@ public interface GpsPointRepository extends JpaRepository<GpsPoint, Long> {
     List<GpsPoint> findAllByDateTimeAfterOrderByDateTimeAsc(ZonedDateTime timeStart);
 
     List<GpsPoint> findAllByDateTimeBeforeOrderByDateTimeAsc(ZonedDateTime timeEnd);
-
 }
