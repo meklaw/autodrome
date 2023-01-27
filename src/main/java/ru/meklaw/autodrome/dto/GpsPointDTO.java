@@ -19,4 +19,6 @@ public class GpsPointDTO {
     private double x;
 
     private double y;
+
+    private String address;
 }
