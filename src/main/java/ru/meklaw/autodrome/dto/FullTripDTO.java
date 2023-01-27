@@ -1,7 +1,6 @@
 package ru.meklaw.autodrome.dto;
 
 import lombok.*;
-import ru.meklaw.autodrome.models.Trip;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -11,8 +10,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GpsTripDTO {
-    List<Trip> trips;
+public class FullTripDTO {
+    List<TripDTO> trips;
     ZonedDateTime startDateTime;
     ZonedDateTime endDateTime;
     GpsPointDTO startPoint;
