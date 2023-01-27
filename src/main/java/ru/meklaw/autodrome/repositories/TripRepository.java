@@ -17,9 +17,9 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     @Query("select max(endTimeUtc) from Trip where  vehicle.id = :vehicleId and endTimeUtc <= :endTime")
     Optional<ZonedDateTime> findEndTripPoint(long vehicleId, ZonedDateTime endTime);
 
-    List<Trip> findAllByVehicleIdAndStartTimeUtcIsGreaterThanEqualAndEndTimeUtcLessThanEqual(Long vehicle_id,
-                                                                                             ZonedDateTime startTimeUtc,
-                                                                                             ZonedDateTime endTimeUtc);
+    List<Trip> findAllByVehicleIdAndStartTimeUtcIsGreaterThanEqualAndEndTimeUtcLessThanEqualOrderByStartTimeUtc(Long vehicle_id,
+                                                                                                                ZonedDateTime startTimeUtc,
+                                                                                                                ZonedDateTime endTimeUtc);
 
     List<Trip> findAllByVehicleId(long vehicleId);
 }
