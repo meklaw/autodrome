@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
-import ru.meklaw.autodrome.dto.GpsTripDTO;
+import ru.meklaw.autodrome.dto.FullTripDTO;
 import ru.meklaw.autodrome.models.GpsPoint;
 import ru.meklaw.autodrome.service.GpsPointService;
 import ru.meklaw.autodrome.service.TripService;
@@ -62,9 +62,9 @@ public class GpsRestController {
     }
 
     @GetMapping("/trip")
-    public GpsTripDTO indexTrip(@RequestParam() long vehicle_id,
-                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_start,
-                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_end) {
+    public FullTripDTO indexTrip(@RequestParam() long vehicle_id,
+                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_start,
+                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_end) {
         return tripService.findAllTripsDTO(vehicle_id, time_start, time_end);
     }
 
