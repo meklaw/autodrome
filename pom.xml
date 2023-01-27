@@ -17,12 +17,12 @@
         <java.version>17</java.version>
     </properties>
 
-	<repositories>
-		<repository>
-			<id>akka-releases</id>
-			<url>https://repo.akka.io/releases/</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>akka-releases</id>
+            <url>https://repo.akka.io/releases/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -75,10 +75,15 @@
             <artifactId>java-jwt</artifactId>
             <version>4.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>13.0</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>
-
 
 
     <build>
