@@ -56,7 +56,7 @@ public class TripGpsService {
 
     @Transactional(readOnly = true)
     public List<Trip> findAllTrips(long vehicleId) {
-        return tripRepository.findAllByVehicleId(vehicleId);
+        return tripRepository.findAllByVehicleIdOrderByStartTimeUtc(vehicleId);
     }
 
     @Transactional(readOnly = true)
