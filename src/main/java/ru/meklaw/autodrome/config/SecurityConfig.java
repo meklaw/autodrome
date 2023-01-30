@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/process_login")
+                .defaultSuccessUrl("/enterprises", true)
                 .failureUrl("/auth/login?error")
                 .and()
                 .logout()//настройка выхода
