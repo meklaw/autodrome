@@ -2,6 +2,7 @@ package ru.meklaw.autodrome.dto;
 
 import lombok.*;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -16,4 +17,9 @@ public class FullTripDTO {
     ZonedDateTime endDateTime;
     GpsPointDTO startPoint;
     GpsPointDTO endPoint;
+
+    public void changeTimeWithZone(ZoneId zoneId) {
+        startDateTime = startDateTime.withZoneSameInstant(zoneId);
+        endDateTime = endDateTime.withZoneSameInstant(zoneId);
+    }
 }

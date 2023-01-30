@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -20,4 +21,8 @@ public class VehicleDTO {
     private Long vehicleBrandId;
     private Long enterpriseId;
     private ZonedDateTime buyDateTimeUtc;
+
+    public void changeTimeWithZone(ZoneId zoneId) {
+        buyDateTimeUtc = buyDateTimeUtc.withZoneSameInstant(zoneId);
+    }
 }

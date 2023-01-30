@@ -1,8 +1,8 @@
 package ru.meklaw.autodrome.dto;
 
 import lombok.*;
-import ru.meklaw.autodrome.models.Trip;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Builder
@@ -15,9 +15,8 @@ public class TripDTO {
     private ZonedDateTime startTimeUtc;
     private ZonedDateTime endTimeUtc;
 
-    public TripDTO(Trip trip) {
-        this.id = trip.getId();
-        this.startTimeUtc = trip.getStartTimeUtc();
-        this.endTimeUtc = trip.getEndTimeUtc();
+    public void changeTimeWithZone(ZoneId zoneId) {
+        startTimeUtc = startTimeUtc.withZoneSameInstant(zoneId);
+        endTimeUtc = endTimeUtc.withZoneSameInstant(zoneId);
     }
 }
