@@ -38,7 +38,7 @@ public class TripGpsRestController {
     public List<TripDTO> indexAllTrips(@RequestParam() long vehicle_id) {
         return tripGpsService.findAllTrips(vehicle_id)
                              .stream()
-                             .map(objectConverter::convertToTripDTO)
+                             .map(tripGpsService::convertToTripDTO)
                              .toList();
     }
 
@@ -49,7 +49,7 @@ public class TripGpsRestController {
                                   @RequestParam(defaultValue = "false") boolean geoJSON) {
         List<GpsPointDTO> gpsPoints = tripGpsService.findAllPoints(vehicle_id, time_start, time_end)
                                                     .stream()
-                                                    .map(objectConverter::convertToGpsPointDTO)
+                                                    .map(tripGpsService::convertToGpsPointDTO)
                                                     .collect(Collectors.toList());
         if (geoJSON) {
             return objectConverter.convertToGeoJSON(gpsPoints);
