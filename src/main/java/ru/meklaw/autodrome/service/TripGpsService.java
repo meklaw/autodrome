@@ -3,9 +3,7 @@ package ru.meklaw.autodrome.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import ru.meklaw.autodrome.dto.FullTripDTO;
-import ru.meklaw.autodrome.dto.GpsPointDTO;
-import ru.meklaw.autodrome.dto.TripDTO;
 import ru.meklaw.autodrome.models.GpsPoint;
 import ru.meklaw.autodrome.models.Trip;
 import ru.meklaw.autodrome.repositories.TripRepository;
 import ru.meklaw.autodrome.repositories.VehiclesRepository;
+import ru.meklaw.autodrome.util.ObjectConverter;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -30,19 +27,19 @@ public class TripGpsService {
     private final TripRepository tripRepository;
     private final PointGpsService pointGpsService;
     private final VehiclesRepository vehiclesRepository;
-    private final ModelMapper modelMapper;
+    private final ObjectConverter objectConverter;
+
     @Value("${yandex.geocoder.api.key}")
     private String yandexApiKey;
 
     @Autowired
     public TripGpsService(TripRepository tripRepository,
                           PointGpsService pointGpsService,
-                          VehiclesRepository vehiclesRepository,
-                          ModelMapper modelMapper) {
+                          VehiclesRepository vehiclesRepository, ObjectConverter objectConverter) {
         this.tripRepository = tripRepository;
         this.pointGpsService = pointGpsService;
         this.vehiclesRepository = vehiclesRepository;
-        this.modelMapper = modelMapper;
+        this.objectConverter = objectConverter;
     }
 
     @Transactional(readOnly = true)
@@ -89,19 +86,19 @@ public class TripGpsService {
 
         return FullTripDTO.builder()
                           .trips(trips.stream()
-                                      .map(TripDTO::new)
+                                      .map(objectConverter::convertToTripDTO)
                                       .toList())
                           .startDateTime(trips.get(0)
                                               .getStartTimeUtc())
                           .endDateTime(trips.get(trips.size() - 1)
                                             .getEndTimeUtc())
-                          .startPoint(convertToGpsPointDTO(points.get(0)))
-                          .endPoint(convertToGpsPointDTO(points.get(points.size() - 1)))
+                          .startPoint(objectConverter.convertToGpsPointDTO(points.get(0)))
+                          .endPoint(objectConverter.convertToGpsPointDTO(points.get(points.size() - 1)))
                           .build();
     }
 
     @NotNull
-    private String findAddress(GpsPoint point) {
+    public String findAddress(GpsPoint point) {
         RestTemplate restTemplate = new RestTemplate();
         String url = "https://geocode-maps.yandex.ru/1.x/?apikey=" + yandexApiKey + "&format=json&geocode=" + point.getX() + "," + point.getY();
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -121,14 +118,5 @@ public class TripGpsService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @NotNull
-    @Contract(pure = true)
-    private GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
-        GpsPointDTO gpsPointDTO = modelMapper.map(point, GpsPointDTO.class);
-        gpsPointDTO.setAddress(findAddress(point));
-
-        return gpsPointDTO;
     }
 }
