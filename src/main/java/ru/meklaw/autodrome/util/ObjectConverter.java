@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.meklaw.autodrome.dto.*;
 import ru.meklaw.autodrome.models.*;
+import ru.meklaw.autodrome.service.TripGpsService;
 import ru.meklaw.autodrome.service.VehiclesService;
 
 import java.util.*;
@@ -12,10 +13,12 @@ import java.util.*;
 public class ObjectConverter {
     private final ModelMapper modelMapper;
     private final VehiclesService vehiclesService;
+    private final TripGpsService tripGpsService;
 
-    public ObjectConverter(ModelMapper modelMapper, VehiclesService vehiclesService) {
+    public ObjectConverter(ModelMapper modelMapper, VehiclesService vehiclesService, TripGpsService tripGpsService) {
         this.modelMapper = modelMapper;
         this.vehiclesService = vehiclesService;
+        this.tripGpsService = tripGpsService;
     }
 
     public DriverDTO convertToDriverDTO(Driver driver) {
@@ -37,10 +40,6 @@ public class ObjectConverter {
         vehiclesService.enriseEnterprise(vehicle, dto);
 
         return vehicle;
-    }
-
-    public GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
-        return modelMapper.map(point, GpsPointDTO.class);
     }
 
     public Object convertToGeoJSON(List<GpsPointDTO> gpsPoints) {
@@ -73,5 +72,12 @@ public class ObjectConverter {
 
     public TripDTO convertToTripDTO(Trip trip) {
         return modelMapper.map(trip, TripDTO.class);
+    }
+
+    public GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
+        GpsPointDTO gpsPointDTO = modelMapper.map(point, GpsPointDTO.class);
+        gpsPointDTO.setAddress(tripGpsService.findAddress(point));
+
+        return gpsPointDTO;
     }
 }
