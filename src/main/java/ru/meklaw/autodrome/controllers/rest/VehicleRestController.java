@@ -58,7 +58,7 @@ public class VehicleRestController {
     @GetMapping("/{id}")
     public VehicleDTO findById(@PathVariable long id) {
         VehicleDTO dto = objectConverter.convertToVehicleDTO(vehiclesService.findById(id));
-        dto.changeTimeWithZone(ZoneId.systemDefault());
+        dto.changeTimeWithZone(ZoneId.of("Europe/Moscow"));
 
         return dto;
     }

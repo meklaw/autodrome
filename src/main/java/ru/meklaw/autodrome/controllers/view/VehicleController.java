@@ -5,9 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.controllers.rest.EnterpriseRestController;
+import ru.meklaw.autodrome.controllers.rest.TripGpsRestController;
 import ru.meklaw.autodrome.controllers.rest.VehicleRestController;
 import ru.meklaw.autodrome.dto.VehicleDTO;
 import ru.meklaw.autodrome.service.VehicleBrandsService;
+
+import java.time.ZoneId;
 
 
 @Controller
@@ -16,12 +19,17 @@ public class VehicleController {
     private final VehicleBrandsService vehicleBrandsService;
     private final VehicleRestController vehicleRestController;
     private final EnterpriseRestController enterpriseRestController;
+    private final TripGpsRestController tripGpsRestController;
 
     @Autowired
-    public VehicleController(VehicleBrandsService vehicleBrandsService, VehicleRestController vehicleRestController, EnterpriseRestController enterpriseRestController) {
+    public VehicleController(VehicleBrandsService vehicleBrandsService,
+                             VehicleRestController vehicleRestController,
+                             EnterpriseRestController enterpriseRestController,
+                             TripGpsRestController tripGpsRestController) {
         this.vehicleBrandsService = vehicleBrandsService;
         this.vehicleRestController = vehicleRestController;
         this.enterpriseRestController = enterpriseRestController;
+        this.tripGpsRestController = tripGpsRestController;
     }
 
     @GetMapping
@@ -63,7 +71,13 @@ public class VehicleController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable long id, Model model) {
-        model.addAttribute("vehicle", vehicleRestController.findById(id));
+        VehicleDTO vehicleDTO = vehicleRestController.findById(id);
+
+        model.addAttribute("vehicle", vehicleDTO);
+        model.addAttribute("trips",
+                tripGpsRestController.indexAllTrips(id)
+                                     .stream()
+                                     .peek(tripDTO -> tripDTO.changeTimeWithZone(ZoneId.of("Europe/Moscow"))));
 
         return "/vehicles/view";
     }
