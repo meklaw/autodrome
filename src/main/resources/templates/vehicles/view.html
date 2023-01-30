@@ -17,7 +17,7 @@
 
 <p>Trips:</p>
 <div th:each="trip : ${trips}">
-    <a th:href="@{/trip/{id}(id=${trip.id})}"
+    <a th:href="@{/gps/trip/{id}(id=${trip.id})}"
        th:text="'ID: ' + ${trip.id} + ', Number: ' + ${trip.startTimeUtc} + ', Cost: ' + ${trip.endTimeUtc}"></a>
 </div>
 
