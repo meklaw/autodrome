@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
 import ru.meklaw.autodrome.service.PointGpsService;
+import ru.meklaw.autodrome.service.TripGpsService;
 import ru.meklaw.autodrome.util.ObjectConverter;
 
 import java.time.ZonedDateTime;
@@ -17,11 +18,15 @@ import java.util.stream.Collectors;
 public class PointGpsRestController {
     private final PointGpsService pointGpsService;
     private final ObjectConverter objectConverter;
+    private final TripGpsService tripGpsService;
 
     @Autowired
-    public PointGpsRestController(PointGpsService pointGpsService, ObjectConverter objectConverter) {
+    public PointGpsRestController(PointGpsService pointGpsService,
+                                  ObjectConverter objectConverter,
+                                  TripGpsService tripGpsService) {
         this.pointGpsService = pointGpsService;
         this.objectConverter = objectConverter;
+        this.tripGpsService = tripGpsService;
     }
 
     @GetMapping
@@ -31,7 +36,7 @@ public class PointGpsRestController {
                         @RequestParam(defaultValue = "false") boolean geoJSON) {
         List<GpsPointDTO> gpsPoints = pointGpsService.findAll(vehicle_id, time_start, time_end)
                                                      .stream()
-                                                     .map(objectConverter::convertToGpsPointDTO)
+                                                     .map(tripGpsService::convertToGpsPointDTO)
                                                      .collect(Collectors.toList());
         if (geoJSON) {
             return objectConverter.convertToGeoJSON(gpsPoints);
@@ -43,7 +48,7 @@ public class PointGpsRestController {
 
     @GetMapping("/{id}")
     public GpsPointDTO findById(@PathVariable long id) {
-        return objectConverter.convertToGpsPointDTO(pointGpsService.findById(id));
+        return tripGpsService.convertToGpsPointDTO(pointGpsService.findById(id));
     }
 
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import ru.meklaw.autodrome.dto.FullTripDTO;
+import ru.meklaw.autodrome.dto.GpsPointDTO;
+import ru.meklaw.autodrome.dto.TripDTO;
 import ru.meklaw.autodrome.models.GpsPoint;
 import ru.meklaw.autodrome.models.Trip;
 import ru.meklaw.autodrome.repositories.TripRepository;
 import ru.meklaw.autodrome.repositories.VehiclesRepository;
-import ru.meklaw.autodrome.util.ObjectConverter;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -27,7 +29,7 @@ public class TripGpsService {
     private final TripRepository tripRepository;
     private final PointGpsService pointGpsService;
     private final VehiclesRepository vehiclesRepository;
-    private final ObjectConverter objectConverter;
+    private final ModelMapper modelMapper;
 
     @Value("${yandex.geocoder.api.key}")
     private String yandexApiKey;
@@ -35,11 +37,11 @@ public class TripGpsService {
     @Autowired
     public TripGpsService(TripRepository tripRepository,
                           PointGpsService pointGpsService,
-                          VehiclesRepository vehiclesRepository, ObjectConverter objectConverter) {
+                          VehiclesRepository vehiclesRepository, ModelMapper modelMapper) {
         this.tripRepository = tripRepository;
         this.pointGpsService = pointGpsService;
         this.vehiclesRepository = vehiclesRepository;
-        this.objectConverter = objectConverter;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)
@@ -86,14 +88,14 @@ public class TripGpsService {
 
         return FullTripDTO.builder()
                           .trips(trips.stream()
-                                      .map(objectConverter::convertToTripDTO)
+                                      .map(this::convertToTripDTO)
                                       .toList())
                           .startDateTime(trips.get(0)
                                               .getStartTimeUtc())
                           .endDateTime(trips.get(trips.size() - 1)
                                             .getEndTimeUtc())
-                          .startPoint(objectConverter.convertToGpsPointDTO(points.get(0)))
-                          .endPoint(objectConverter.convertToGpsPointDTO(points.get(points.size() - 1)))
+                          .startPoint(convertToGpsPointDTO(points.get(0)))
+                          .endPoint(convertToGpsPointDTO(points.get(points.size() - 1)))
                           .build();
     }
 
@@ -119,4 +121,16 @@ public class TripGpsService {
             throw new RuntimeException(e);
         }
     }
+
+    public GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
+        GpsPointDTO gpsPointDTO = modelMapper.map(point, GpsPointDTO.class);
+        gpsPointDTO.setAddress(findAddress(point));
+
+        return gpsPointDTO;
+    }
+
+    public TripDTO convertToTripDTO(Trip trip) {
+        return modelMapper.map(trip, TripDTO.class);
+    }
+
 }

@@ -2,9 +2,13 @@ package ru.meklaw.autodrome.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.meklaw.autodrome.dto.*;
-import ru.meklaw.autodrome.models.*;
-import ru.meklaw.autodrome.service.TripGpsService;
+import ru.meklaw.autodrome.dto.DriverDTO;
+import ru.meklaw.autodrome.dto.EnterpriseDTO;
+import ru.meklaw.autodrome.dto.GpsPointDTO;
+import ru.meklaw.autodrome.dto.VehicleDTO;
+import ru.meklaw.autodrome.models.Driver;
+import ru.meklaw.autodrome.models.Enterprise;
+import ru.meklaw.autodrome.models.Vehicle;
 import ru.meklaw.autodrome.service.VehiclesService;
 
 import java.util.*;
@@ -13,12 +17,10 @@ import java.util.*;
 public class ObjectConverter {
     private final ModelMapper modelMapper;
     private final VehiclesService vehiclesService;
-    private final TripGpsService tripGpsService;
 
-    public ObjectConverter(ModelMapper modelMapper, VehiclesService vehiclesService, TripGpsService tripGpsService) {
+    public ObjectConverter(ModelMapper modelMapper, VehiclesService vehiclesService) {
         this.modelMapper = modelMapper;
         this.vehiclesService = vehiclesService;
-        this.tripGpsService = tripGpsService;
     }
 
     public DriverDTO convertToDriverDTO(Driver driver) {
@@ -70,14 +72,4 @@ public class ObjectConverter {
         return geoJSON;
     }
 
-    public TripDTO convertToTripDTO(Trip trip) {
-        return modelMapper.map(trip, TripDTO.class);
-    }
-
-    public GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
-        GpsPointDTO gpsPointDTO = modelMapper.map(point, GpsPointDTO.class);
-        gpsPointDTO.setAddress(tripGpsService.findAddress(point));
-
-        return gpsPointDTO;
-    }
 }
