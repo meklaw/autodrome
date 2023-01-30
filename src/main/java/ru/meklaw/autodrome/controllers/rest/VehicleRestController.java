@@ -44,25 +44,21 @@ public class VehicleRestController {
         if (enterprise_id != -1) {
             Enterprise enterprise = enterprisesService.findById(enterprise_id);
 
-            vehicles.forEach(vehicle -> setWithZoneSameInstant(vehicle, enterprise.getTimeZone()));
-
-            return vehicles;
+            return vehicles.stream()
+                           .peek(vehicleDTO -> vehicleDTO.changeTimeWithZone(enterprise.getTimeZone()))
+                           .toList();
         }
 //        TODO take timezone of manager and move this logic to service
-        vehicles.forEach(vehicle -> setWithZoneSameInstant(vehicle, ZoneId.of("Europe/Moscow")));
 
-        return vehicles;
-    }
-
-    private void setWithZoneSameInstant(VehicleDTO vehicle, ZoneId zoneId) {
-        vehicle.setBuyDateTimeUtc(vehicle.getBuyDateTimeUtc()
-                                         .withZoneSameInstant(zoneId));
+        return vehicles.stream()
+                       .peek(vehicleDTO -> vehicleDTO.changeTimeWithZone(ZoneId.of("Europe/Moscow")))
+                       .toList();
     }
 
     @GetMapping("/{id}")
     public VehicleDTO findById(@PathVariable long id) {
         VehicleDTO dto = objectConverter.convertToVehicleDTO(vehiclesService.findById(id));
-        setWithZoneSameInstant(dto, ZoneId.systemDefault());
+        dto.changeTimeWithZone(ZoneId.systemDefault());
 
         return dto;
     }
