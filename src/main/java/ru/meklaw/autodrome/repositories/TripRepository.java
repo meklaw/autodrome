@@ -21,5 +21,5 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
                                                                                                                 ZonedDateTime startTimeUtc,
                                                                                                                 ZonedDateTime endTimeUtc);
 
-    List<Trip> findAllByVehicleId(long vehicleId);
+    List<Trip> findAllByVehicleIdOrderByStartTimeUtc(long vehicleId);
 }
