@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.meklaw.autodrome.dto.FullTripDTO;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
+import ru.meklaw.autodrome.dto.TripDTO;
 import ru.meklaw.autodrome.service.TripGpsService;
 import ru.meklaw.autodrome.util.ObjectConverter;
 
@@ -26,11 +27,19 @@ public class TripGpsRestController {
         this.objectConverter = objectConverter;
     }
 
-    @GetMapping("")
-    public FullTripDTO indexTrip(@RequestParam() long vehicle_id,
-                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_start,
-                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_end) {
+    @GetMapping
+    public FullTripDTO indexFullTrip(@RequestParam() long vehicle_id,
+                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_start,
+                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time_end) {
         return tripGpsService.findAllTripsDTO(vehicle_id, time_start, time_end);
+    }
+
+    @GetMapping("/all")
+    public List<TripDTO> indexAllTrips(@RequestParam() long vehicle_id) {
+        return tripGpsService.findAllTrips(vehicle_id)
+                             .stream()
+                             .map(objectConverter::convertToTripDTO)
+                             .toList();
     }
 
     @GetMapping("/point")
