@@ -26,21 +26,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TripService {
+public class TripGpsService {
     private final TripRepository tripRepository;
-    private final GpsPointService gpsPointService;
+    private final PointGpsService pointGpsService;
     private final VehiclesRepository vehiclesRepository;
     private final ModelMapper modelMapper;
     @Value("${yandex.geocoder.api.key}")
     private String yandexApiKey;
 
     @Autowired
-    public TripService(TripRepository tripRepository,
-                       GpsPointService gpsPointService,
-                       VehiclesRepository vehiclesRepository,
-                       ModelMapper modelMapper) {
+    public TripGpsService(TripRepository tripRepository,
+                          PointGpsService pointGpsService,
+                          VehiclesRepository vehiclesRepository,
+                          ModelMapper modelMapper) {
         this.tripRepository = tripRepository;
-        this.gpsPointService = gpsPointService;
+        this.pointGpsService = pointGpsService;
         this.vehiclesRepository = vehiclesRepository;
         this.modelMapper = modelMapper;
     }
@@ -51,7 +51,7 @@ public class TripService {
         Optional<ZonedDateTime> begin = tripRepository.findStartTripPoint(vehicleId, timeStart);
         Optional<ZonedDateTime> end = tripRepository.findEndTripPoint(vehicleId, timeEnd);
 
-        return gpsPointService.findAll(vehicleId, begin, end);
+        return pointGpsService.findAll(vehicleId, begin, end);
     }
 
     @Transactional(readOnly = true)
@@ -77,7 +77,7 @@ public class TripService {
                                                                     .withZoneSameInstant(enterpriseTimeZone));
                                          })
                                          .toList();
-        List<GpsPoint> points = gpsPointService.find(vehicleId,
+        List<GpsPoint> points = pointGpsService.find(vehicleId,
                                                        Optional.ofNullable(startTime),
                                                        Optional.ofNullable(endTime))
                                                .stream()

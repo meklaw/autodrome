@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GpsPointService {
+public class PointGpsService {
     private final GpsPointRepository gpsPointRepository;
     private final VehiclesRepository vehiclesRepository;
 
     @Autowired
-    public GpsPointService(GpsPointRepository gpsPointRepository, VehiclesRepository vehiclesRepository) {
+    public PointGpsService(GpsPointRepository gpsPointRepository, VehiclesRepository vehiclesRepository) {
         this.gpsPointRepository = gpsPointRepository;
         this.vehiclesRepository = vehiclesRepository;
     }

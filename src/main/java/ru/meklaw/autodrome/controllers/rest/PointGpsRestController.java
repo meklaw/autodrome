@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
-import ru.meklaw.autodrome.service.GpsPointService;
+import ru.meklaw.autodrome.service.PointGpsService;
 import ru.meklaw.autodrome.util.ObjectConverter;
 
 import java.time.ZonedDateTime;
@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/gps/point")
 public class PointGpsRestController {
-    private final GpsPointService gpsPointService;
+    private final PointGpsService pointGpsService;
     private final ObjectConverter objectConverter;
 
     @Autowired
-    public PointGpsRestController(GpsPointService gpsPointService, ObjectConverter objectConverter) {
-        this.gpsPointService = gpsPointService;
+    public PointGpsRestController(PointGpsService pointGpsService, ObjectConverter objectConverter) {
+        this.pointGpsService = pointGpsService;
         this.objectConverter = objectConverter;
     }
 
@@ -29,7 +29,7 @@ public class PointGpsRestController {
                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_start,
                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<ZonedDateTime> time_end,
                         @RequestParam(defaultValue = "false") boolean geoJSON) {
-        List<GpsPointDTO> gpsPoints = gpsPointService.findAll(vehicle_id, time_start, time_end)
+        List<GpsPointDTO> gpsPoints = pointGpsService.findAll(vehicle_id, time_start, time_end)
                                                      .stream()
                                                      .map(objectConverter::convertToGpsPointDTO)
                                                      .collect(Collectors.toList());
@@ -43,12 +43,12 @@ public class PointGpsRestController {
 
     @GetMapping("/{id}")
     public GpsPointDTO findById(@PathVariable long id) {
-        return objectConverter.convertToGpsPointDTO(gpsPointService.findById(id));
+        return objectConverter.convertToGpsPointDTO(pointGpsService.findById(id));
     }
 
 
     @GetMapping("/init")
     public void init() {
-        gpsPointService.init();
+        pointGpsService.init();
     }
 }
