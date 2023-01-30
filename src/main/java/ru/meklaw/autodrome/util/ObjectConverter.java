@@ -2,14 +2,8 @@ package ru.meklaw.autodrome.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.meklaw.autodrome.dto.DriverDTO;
-import ru.meklaw.autodrome.dto.EnterpriseDTO;
-import ru.meklaw.autodrome.dto.GpsPointDTO;
-import ru.meklaw.autodrome.dto.VehicleDTO;
-import ru.meklaw.autodrome.models.Driver;
-import ru.meklaw.autodrome.models.Enterprise;
-import ru.meklaw.autodrome.models.GpsPoint;
-import ru.meklaw.autodrome.models.Vehicle;
+import ru.meklaw.autodrome.dto.*;
+import ru.meklaw.autodrome.models.*;
 import ru.meklaw.autodrome.service.VehiclesService;
 
 import java.util.*;
@@ -75,5 +69,9 @@ public class ObjectConverter {
         geoJSON.put("features", features);
 
         return geoJSON;
+    }
+
+    public TripDTO convertToTripDTO(Trip trip) {
+        return modelMapper.map(trip, TripDTO.class);
     }
 }
