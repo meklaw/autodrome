@@ -2,8 +2,10 @@ package ru.meklaw.autodrome.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import ru.meklaw.autodrome.dto.EnterpriseDTO;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
 import ru.meklaw.autodrome.dto.VehicleDTO;
+import ru.meklaw.autodrome.models.Enterprise;
 import ru.meklaw.autodrome.models.GpsPoint;
 import ru.meklaw.autodrome.models.Vehicle;
 import ru.meklaw.autodrome.service.VehiclesService;
@@ -18,6 +20,10 @@ public class ObjectConverter {
     public ObjectConverter(ModelMapper modelMapper, VehiclesService vehiclesService) {
         this.modelMapper = modelMapper;
         this.vehiclesService = vehiclesService;
+    }
+
+    public EnterpriseDTO convertToEnterpriseDTO(Enterprise enterprise) {
+        return modelMapper.map(enterprise, EnterpriseDTO.class);
     }
 
     public VehicleDTO convertToVehicleDTO(Vehicle vehicle) {
