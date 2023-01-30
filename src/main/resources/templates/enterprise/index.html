@@ -10,9 +10,5 @@
     <a th:href="@{/enterprises/{id}(id=${enterprise.id})}"
        th:text="'ID: ' + ${enterprise.id} + ', Name: ' + ${enterprise.name} + ', City: ' + ${enterprise.city} + ', Founded: ' + ${enterprise.founded.toString()}"></a>
 </div>
-<br/>
-<a th:href="@{/vehicles}" th:text="Vehicles"></a>
-<br/>
-<a th:href="@{/brands}" th:text="Brands"></a>
 </body>
 </html>

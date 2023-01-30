@@ -18,8 +18,6 @@
 <a th:if="${enterprise}" th:href="@{/vehicles/create(enterprise_id=${enterprise.id})}"
    th:text="'Create new vehicle'"></a>
 
-<br th:if="${enterprise}"/>
-<a th:if="${enterprise}" th:href="@{/vehicles}" th:text="'All vehicles'"></a>
 
 <br/>
 <a th:href="@{/brands}" th:text="'Brands'"></a>
