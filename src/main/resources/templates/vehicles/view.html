@@ -15,6 +15,12 @@
 <p th:text="'Enterprise: ' + ${vehicle.enterpriseId}"></p>
 <p th:text="'Buy date time (local): ' + ${vehicle.buyDateTimeUtc.toString()}"></p>
 
+<p>Trips:</p>
+<div th:each="trip : ${trips}">
+    <a th:href="@{/trip/{id}(id=${trip.id})}"
+       th:text="'ID: ' + ${trip.id} + ', Number: ' + ${trip.startTimeUtc} + ', Cost: ' + ${trip.endTimeUtc}"></a>
+</div>
+
 <br/>
 <a th:href="@{/vehicles/{id}/edit(id=${vehicle.id})}" th:text="'Edit'"></a>
 
@@ -22,8 +28,8 @@
     <br/>
     <button type="submit">Delete</button>
 </form>
-<br/>
 
-<a th:href="@{/vehicles}">Vehicles</a>
+<br/>
+<a th:href="@{/enterprises}" th:text="'Enterprises'"></a>
 </body>
 </html>
