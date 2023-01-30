@@ -1,11 +1,12 @@
 package ru.meklaw.autodrome.controllers.rest;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
+import ru.meklaw.autodrome.models.GpsPoint;
 import ru.meklaw.autodrome.service.PointGpsService;
-import ru.meklaw.autodrome.service.TripGpsService;
 import ru.meklaw.autodrome.util.ObjectConverter;
 
 import java.time.ZonedDateTime;
@@ -18,15 +19,14 @@ import java.util.stream.Collectors;
 public class PointGpsRestController {
     private final PointGpsService pointGpsService;
     private final ObjectConverter objectConverter;
-    private final TripGpsService tripGpsService;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public PointGpsRestController(PointGpsService pointGpsService,
-                                  ObjectConverter objectConverter,
-                                  TripGpsService tripGpsService) {
+                                  ObjectConverter objectConverter, ModelMapper modelMapper) {
         this.pointGpsService = pointGpsService;
         this.objectConverter = objectConverter;
-        this.tripGpsService = tripGpsService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
@@ -36,7 +36,7 @@ public class PointGpsRestController {
                         @RequestParam(defaultValue = "false") boolean geoJSON) {
         List<GpsPointDTO> gpsPoints = pointGpsService.findAll(vehicle_id, time_start, time_end)
                                                      .stream()
-                                                     .map(tripGpsService::convertToGpsPointDTO)
+                                                     .map(this::convertToGpsPointDTO)
                                                      .collect(Collectors.toList());
         if (geoJSON) {
             return objectConverter.convertToGeoJSON(gpsPoints);
@@ -48,12 +48,16 @@ public class PointGpsRestController {
 
     @GetMapping("/{id}")
     public GpsPointDTO findById(@PathVariable long id) {
-        return tripGpsService.convertToGpsPointDTO(pointGpsService.findById(id));
+        return this.convertToGpsPointDTO(pointGpsService.findById(id));
     }
 
 
     @GetMapping("/init")
     public void init() {
         pointGpsService.init();
+    }
+
+    public GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
+        return modelMapper.map(point, GpsPointDTO.class);
     }
 }
