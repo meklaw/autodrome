@@ -3,18 +3,35 @@ package ru.meklaw.autodrome.util;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
+import ru.meklaw.autodrome.dto.VehicleDTO;
 import ru.meklaw.autodrome.models.GpsPoint;
+import ru.meklaw.autodrome.models.Vehicle;
+import ru.meklaw.autodrome.service.VehiclesService;
 
 import java.util.*;
 
 @Component
 public class ObjectConverter {
     private final ModelMapper modelMapper;
+    private final VehiclesService vehiclesService;
 
-    public ObjectConverter(ModelMapper modelMapper) {
+    public ObjectConverter(ModelMapper modelMapper, VehiclesService vehiclesService) {
         this.modelMapper = modelMapper;
+        this.vehiclesService = vehiclesService;
     }
 
+    public VehicleDTO convertToVehicleDTO(Vehicle vehicle) {
+        return modelMapper.map(vehicle, VehicleDTO.class);
+    }
+
+    public Vehicle convertToVehicle(VehicleDTO dto) {
+        Vehicle vehicle = modelMapper.map(dto, Vehicle.class);
+
+        vehiclesService.enriseBrand(vehicle, dto);
+        vehiclesService.enriseEnterprise(vehicle, dto);
+
+        return vehicle;
+    }
 
     public GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
         return modelMapper.map(point, GpsPointDTO.class);

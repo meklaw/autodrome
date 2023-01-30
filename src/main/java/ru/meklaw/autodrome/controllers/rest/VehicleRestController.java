@@ -1,6 +1,5 @@
 package ru.meklaw.autodrome.controllers.rest;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -8,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.VehicleDTO;
 import ru.meklaw.autodrome.models.Enterprise;
-import ru.meklaw.autodrome.models.Vehicle;
 import ru.meklaw.autodrome.service.EnterprisesService;
 import ru.meklaw.autodrome.service.VehiclesService;
+import ru.meklaw.autodrome.util.ObjectConverter;
 
 import java.time.ZoneId;
 import java.util.List;
@@ -20,13 +19,15 @@ import java.util.List;
 public class VehicleRestController {
     private final VehiclesService vehiclesService;
     private final EnterprisesService enterprisesService;
-    private final ModelMapper modelMapper;
+    private final ObjectConverter objectConverter;
 
     @Autowired
-    public VehicleRestController(VehiclesService vehiclesService, EnterprisesService enterprisesService, ModelMapper modelMapper) {
+    public VehicleRestController(VehiclesService vehiclesService,
+                                 EnterprisesService enterprisesService,
+                                 ObjectConverter objectConverter) {
         this.vehiclesService = vehiclesService;
         this.enterprisesService = enterprisesService;
-        this.modelMapper = modelMapper;
+        this.objectConverter = objectConverter;
     }
 
     @GetMapping
@@ -36,7 +37,7 @@ public class VehicleRestController {
 
         List<VehicleDTO> vehicles = vehiclesService.findAll(enterprise_id, PageRequest.of(page, size))
                                                    .stream()
-                                                   .map(this::convertToVehicleDTO)
+                                                   .map(objectConverter::convertToVehicleDTO)
                                                    .toList();
 
 
@@ -60,7 +61,7 @@ public class VehicleRestController {
 
     @GetMapping("/{id}")
     public VehicleDTO findById(@PathVariable long id) {
-        VehicleDTO dto = convertToVehicleDTO(vehiclesService.findById(id));
+        VehicleDTO dto = objectConverter.convertToVehicleDTO(vehiclesService.findById(id));
         setWithZoneSameInstant(dto, ZoneId.systemDefault());
 
         return dto;
@@ -68,14 +69,14 @@ public class VehicleRestController {
 
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody VehicleDTO vehicleDTO) {
-        vehiclesService.create(convertToVehicle(vehicleDTO));
+        vehiclesService.create(objectConverter.convertToVehicle(vehicleDTO));
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@PathVariable long id, @RequestBody VehicleDTO vehicleDTO) {
-        vehiclesService.update(id, convertToVehicle(vehicleDTO));
+        vehiclesService.update(id, objectConverter.convertToVehicle(vehicleDTO));
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -85,19 +86,6 @@ public class VehicleRestController {
         vehiclesService.delete(id);
 
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-    }
-
-    private VehicleDTO convertToVehicleDTO(Vehicle vehicle) {
-        return modelMapper.map(vehicle, VehicleDTO.class);
-    }
-
-    private Vehicle convertToVehicle(VehicleDTO dto) {
-        Vehicle vehicle = modelMapper.map(dto, Vehicle.class);
-
-        vehiclesService.enriseBrand(vehicle, dto);
-        vehiclesService.enriseEnterprise(vehicle, dto);
-
-        return vehicle;
     }
 
 }
