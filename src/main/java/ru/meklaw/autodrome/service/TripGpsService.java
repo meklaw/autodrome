@@ -3,6 +3,7 @@ package ru.meklaw.autodrome.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class TripGpsService {
     @Autowired
     public TripGpsService(TripRepository tripRepository,
                           PointGpsService pointGpsService,
-                          VehiclesRepository vehiclesRepository, ModelMapper modelMapper) {
+                          VehiclesRepository vehiclesRepository,
+                          ModelMapper modelMapper) {
         this.tripRepository = tripRepository;
         this.pointGpsService = pointGpsService;
         this.vehiclesRepository = vehiclesRepository;
@@ -117,9 +119,9 @@ public class TripGpsService {
                        .get("GeocoderMetaData")
                        .get("text")
                        .asText();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        } catch (NullPointerException | JsonProcessingException ignored) {
         }
+        return "address not found";
     }
 
     public GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
@@ -133,4 +135,25 @@ public class TripGpsService {
         return modelMapper.map(trip, TripDTO.class);
     }
 
+    @Transactional(readOnly = true)
+    public List<GpsPoint> findAllTripPoints(long tripId) {
+        Trip trip = tripRepository.findById(tripId)
+                                  .orElseThrow();
+        return findAllPoints(trip.getVehicle()
+                                 .getId(), trip.getStartTimeUtc(), trip.getEndTimeUtc());
+    }
+
+    public String findMapForTrip(long tripId) {
+        val mapUrl = new StringBuilder("https://static-maps.yandex.ru/1.x/?l=map&pl=c:8822DDC0,w:5,");
+
+        findAllTripPoints(tripId).forEach(point -> {
+            mapUrl.append(point.getX());
+            mapUrl.append(',');
+            mapUrl.append(point.getY());
+            mapUrl.append(',');
+        });
+        mapUrl.deleteCharAt(mapUrl.length() - 1);
+
+        return mapUrl.toString();
+    }
 }
