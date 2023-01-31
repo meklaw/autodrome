@@ -55,12 +55,17 @@ public class TripGpsRestController {
         return gpsPoints;
     }
 
-    @GetMapping("/point/{id}")
-    public List<GpsPointDTO> indexTripPoints(@PathVariable() long id) {
-        return tripGpsService.findAllTripPoints(id)
+    @GetMapping("/point/{tripId}")
+    public List<GpsPointDTO> indexTripPoints(@PathVariable() long tripId) {
+        return tripGpsService.findAllTripPoints(tripId)
                              .stream()
                              .map(tripGpsService::convertToGpsPointDTO)
                              .collect(Collectors.toList());
+    }
+
+    @GetMapping("/map/{tripId}")
+    public String indexTripMap(@PathVariable() long tripId) {
+        return tripGpsService.findMapForTrip(tripId);
     }
 
 }
