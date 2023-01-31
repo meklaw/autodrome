@@ -1,10 +1,7 @@
 package ru.meklaw.autodrome.controllers.rest;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.meklaw.autodrome.dto.FullTripDTO;
 import ru.meklaw.autodrome.dto.GpsPointDTO;
 import ru.meklaw.autodrome.dto.TripDTO;
@@ -57,4 +54,13 @@ public class TripGpsRestController {
 
         return gpsPoints;
     }
+
+    @GetMapping("/point/{id}")
+    public List<GpsPointDTO> indexTripPoints(@PathVariable() long id) {
+        return tripGpsService.findAllTripPoints(id)
+                             .stream()
+                             .map(tripGpsService::convertToGpsPointDTO)
+                             .collect(Collectors.toList());
+    }
+
 }
