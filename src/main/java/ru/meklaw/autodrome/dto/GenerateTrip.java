@@ -12,6 +12,6 @@ import lombok.Setter;
 public class GenerateTrip {
     private long vehicleId;
     private int lengthKm;
-    private double speedKph;
+    private double maxSpeedKph;
     private double acceleration;
 }
