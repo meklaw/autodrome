@@ -51,12 +51,6 @@ public class PointGpsRestController {
         return this.convertToGpsPointDTO(pointGpsService.findById(id));
     }
 
-
-    @GetMapping("/init")
-    public void init() {
-        pointGpsService.init();
-    }
-
     public GpsPointDTO convertToGpsPointDTO(GpsPoint point) {
         return modelMapper.map(point, GpsPointDTO.class);
     }
