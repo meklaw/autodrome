@@ -53,7 +53,7 @@ public class ObjectConverter {
             Map<String, Object> properties = new HashMap<>();
 
             geometry.put("type", "Point");
-            geometry.put("coordinates", Arrays.asList(point.getX(), point.getY()));
+            geometry.put("coordinates", Arrays.asList(point.getLat(), point.getLon()));
 
             properties.put("id", point.getId());
             properties.put("dateTime", point.getDateTime());
