@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.meklaw.autodrome.controllers.rest.TripGpsRestController;
+import ru.meklaw.autodrome.dto.TripDTO;
+
+import java.time.ZoneId;
 
 @Controller
 @RequestMapping("/gps")
@@ -18,9 +21,12 @@ public class GpsController {
         this.tripGpsRestController = tripGpsRestController;
     }
 
-    @GetMapping("/trip/{id}")
-    public String findById(@PathVariable long id, Model model) {
-        model.addAttribute("imageUrl", tripGpsRestController.indexTripMap(id));
+    @GetMapping("/trip/{tripId}")
+    public String findById(@PathVariable long tripId, Model model) {
+        TripDTO tripDTO = tripGpsRestController.indexTrip(tripId);
+        tripDTO.changeTimeWithZone(ZoneId.of("Europe/Moscow"));
+        model.addAttribute("trip", tripDTO);
+        model.addAttribute("mapUrl", tripGpsRestController.indexTripMap(tripId));
         return "/gps/trip/view";
     }
 }

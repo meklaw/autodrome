@@ -6,8 +6,12 @@
 </head>
 <body>
 
-<img th:src="${imageUrl}" alt="trip"/>
+<p th:text="'ID: ' + ${trip.id}"></p>
+<p th:text="'Start time (local): ' + ${trip.startTimeUtc}"></p>
+<p th:text="'End time (local): ' + ${trip.endTimeUtc}"></p>
 
+<br/>
+<a th:href="${mapUrl}" th:text="'Show trip on the map'"></a>
 <br/>
 <a th:href="@{/enterprises}" th:text="'Enterprises'"></a>
 </body>
