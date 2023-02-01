@@ -24,11 +24,10 @@ public class GpsPoint {
 
     @Column(name = "date_time")
     private ZonedDateTime dateTime;
-
     @Column(name = "x")
-    private double x;
+    private double lat;
 
     @Column(name = "y")
-    private double y;
+    private double lon;
 }
 

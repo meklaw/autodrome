@@ -17,9 +17,9 @@ public class GpsPointDTO {
 
     private ZonedDateTime dateTime;
 
-    private double x;
+    private double lat;
 
-    private double y;
+    private double lon;
 
     private String address;
 
