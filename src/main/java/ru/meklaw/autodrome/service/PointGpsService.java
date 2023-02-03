@@ -72,4 +72,9 @@ public class PointGpsService {
         return gpsPointRepository.findById(id)
                                  .orElseThrow();
     }
+
+    @Transactional()
+    public void saveAll(List<GpsPoint> points) {
+        gpsPointRepository.saveAllAndFlush(points);
+    }
 }
