@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class GenerateReport {
     ReportType type;
-    Period reportingPeriod;
+    Period period;
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
 }
