@@ -15,16 +15,18 @@ import java.time.ZoneId;
 @RequestMapping("/gps")
 public class GpsController {
     private final TripGpsRestController tripGpsRestController;
+    private final ZoneId localZoneId;
 
     @Autowired
-    public GpsController(TripGpsRestController tripGpsRestController) {
+    public GpsController(TripGpsRestController tripGpsRestController, ZoneId localZoneId) {
         this.tripGpsRestController = tripGpsRestController;
+        this.localZoneId = localZoneId;
     }
 
     @GetMapping("/trip/{tripId}")
     public String findById(@PathVariable long tripId, Model model) {
         TripDTO tripDTO = tripGpsRestController.indexTrip(tripId);
-        tripDTO.changeTimeWithZone(ZoneId.of("Europe/Moscow"));
+        tripDTO.changeTimeWithZone(localZoneId);
         model.addAttribute("trip", tripDTO);
         model.addAttribute("mapUrl", tripGpsRestController.indexTripMap(tripId));
         return "/gps/trip/view";

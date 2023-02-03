@@ -20,14 +20,16 @@ public class VehicleRestController {
     private final VehiclesService vehiclesService;
     private final EnterprisesService enterprisesService;
     private final ObjectConverter objectConverter;
+    private final ZoneId localZoneId;
 
     @Autowired
     public VehicleRestController(VehiclesService vehiclesService,
                                  EnterprisesService enterprisesService,
-                                 ObjectConverter objectConverter) {
+                                 ObjectConverter objectConverter, ZoneId localZoneId) {
         this.vehiclesService = vehiclesService;
         this.enterprisesService = enterprisesService;
         this.objectConverter = objectConverter;
+        this.localZoneId = localZoneId;
     }
 
     @GetMapping
@@ -51,14 +53,14 @@ public class VehicleRestController {
 //        TODO take timezone of manager and move this logic to service
 
         return vehicles.stream()
-                       .peek(vehicleDTO -> vehicleDTO.changeTimeWithZone(ZoneId.of("Europe/Moscow")))
+                       .peek(vehicleDTO -> vehicleDTO.changeTimeWithZone(localZoneId))
                        .toList();
     }
 
     @GetMapping("/{id}")
     public VehicleDTO findById(@PathVariable long id) {
         VehicleDTO dto = objectConverter.convertToVehicleDTO(vehiclesService.findById(id));
-        dto.changeTimeWithZone(ZoneId.of("Europe/Moscow"));
+        dto.changeTimeWithZone(localZoneId);
 
         return dto;
     }

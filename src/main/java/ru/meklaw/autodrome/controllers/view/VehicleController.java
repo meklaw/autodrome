@@ -20,16 +20,19 @@ public class VehicleController {
     private final VehicleRestController vehicleRestController;
     private final EnterpriseRestController enterpriseRestController;
     private final TripGpsRestController tripGpsRestController;
+    private final ZoneId localZoneId;
+
 
     @Autowired
     public VehicleController(VehicleBrandsService vehicleBrandsService,
                              VehicleRestController vehicleRestController,
                              EnterpriseRestController enterpriseRestController,
-                             TripGpsRestController tripGpsRestController) {
+                             TripGpsRestController tripGpsRestController, ZoneId localZoneId) {
         this.vehicleBrandsService = vehicleBrandsService;
         this.vehicleRestController = vehicleRestController;
         this.enterpriseRestController = enterpriseRestController;
         this.tripGpsRestController = tripGpsRestController;
+        this.localZoneId = localZoneId;
     }
 
     @GetMapping
@@ -77,7 +80,7 @@ public class VehicleController {
         model.addAttribute("trips",
                 tripGpsRestController.indexAllTrips(id)
                                      .stream()
-                                     .peek(tripDTO -> tripDTO.changeTimeWithZone(ZoneId.of("Europe/Moscow"))));
+                                     .peek(tripDTO -> tripDTO.changeTimeWithZone(localZoneId)));
 
         return "/vehicles/view";
     }
