@@ -183,27 +183,44 @@ public class TripGpsService {
     }
 
     public void generateTrip(GenerateTrip generateTrip) {
+        Trip resultTrip = new Trip();
+        resultTrip.setVehicle(vehiclesRepository.findById(generateTrip.getVehicleId())
+                                                .orElseThrow(() -> new RuntimeException(
+                                                        "Vehicle with this id doesn't exist")));
         List<GpsPoint> randomGpsPoints = generateRandomPoints();
-        Collections.shuffle(randomGpsPoints);
-        GpsPoint startPoint = randomGpsPoints.get(0);
-        GpsPoint endPoint = randomGpsPoints.get(1);
-        RoutingTripPoints dirtyNewTrip = routingPointsToTrip(startPoint, endPoint);
+        RoutingTripPoints dirtyNewTrip = routingPointsToTrip(randomGpsPoints.get(0), randomGpsPoints.get(1));
+        int dirtyCountPoints = dirtyNewTrip.getPoints()
+                                           .size();
+        double pointsPerKm = ((double) dirtyCountPoints) / (dirtyNewTrip.getDistanceMeters() / 1000);
 
-        double pointsPerKm = ((double) dirtyNewTrip.getPoints()
-                                                   .size()) / (dirtyNewTrip.getDistanceMeters() / 1000);
         int requiredNumberPoints = (int) (pointsPerKm * generateTrip.getLengthKm());
-        int randomStartIndex = (int) (Math.random() * (dirtyNewTrip.getPoints()
-                                                                   .size() - requiredNumberPoints));
+        int randomStartIndex = (int) (Math.random() * (dirtyCountPoints - requiredNumberPoints));
 
-        if (randomStartIndex < 0 || dirtyNewTrip.getPoints()
-                                                .size() <= randomStartIndex + requiredNumberPoints) {
+        if (randomStartIndex < 0 || dirtyCountPoints <= randomStartIndex + requiredNumberPoints) {
             generateTrip(generateTrip);
             return;
         }
-        List<GpsPoint> cleanTrip = dirtyNewTrip.getPoints()
-                                               .subList(randomStartIndex, randomStartIndex + requiredNumberPoints);
+        List<GpsPoint> resultPointsOfTrip = dirtyNewTrip.getPoints()
+                                                        .subList(randomStartIndex,
+                                                                randomStartIndex + requiredNumberPoints);
 
-        System.out.println(getMapUrlForTrip(cleanTrip));
+        double speedMpS = generateTrip.getMaxSpeedKph() / 2 / 3.6;
+        double metersPerPoint = dirtyNewTrip.getDistanceMeters() / ((double) dirtyCountPoints);
+        long deltaTimeAndPoint = (long) (metersPerPoint / speedMpS);
+
+        resultTrip.setStartTimeUtc(ZonedDateTime.now(ZoneId.of("UTC")));
+        ZonedDateTime dateTime = resultTrip.getStartTimeUtc();
+
+        for (GpsPoint point : resultPointsOfTrip) {
+            point.setVehicle(resultTrip.getVehicle());
+            point.setDateTime(dateTime);
+            dateTime = dateTime.withZoneSameInstant(ZoneId.of("UTC"))
+                               .plusSeconds(deltaTimeAndPoint);
+        }
+        resultTrip.setEndTimeUtc(dateTime);
+
+        tripRepository.save(resultTrip);
+        pointGpsService.saveAll(resultPointsOfTrip);
     }
 
     public RoutingTripPoints routingPointsToTrip(GpsPoint startGpsPoint,
@@ -266,13 +283,15 @@ public class TripGpsService {
                 47.461521, 19.049556,
                 46.952052, 7.458751);
 
-        return IntStream.iterate(0, n -> n < points.size(), n -> n + 2)
-                        .mapToObj(n ->
-                                GpsPoint.builder()
-                                        .lat(points.get(n))
-                                        .lon(points.get(n + 1))
-                                        .build()
-                        )
-                        .collect(Collectors.toList());
+        List<GpsPoint> randomGpsPoints = IntStream.iterate(0, n -> n < points.size(), n -> n + 2)
+                                                  .mapToObj(n ->
+                                                          GpsPoint.builder()
+                                                                  .lat(points.get(n))
+                                                                  .lon(points.get(n + 1))
+                                                                  .build()
+                                                  )
+                                                  .collect(Collectors.toList());
+        Collections.shuffle(randomGpsPoints);
+        return randomGpsPoints;
     }
 }
