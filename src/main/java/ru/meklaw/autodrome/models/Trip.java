@@ -30,4 +30,6 @@ public class Trip {
     @Column(name = "end_time_utc")
     private ZonedDateTime endTimeUtc;
 
+    @Column(name = "length_km")
+    private int lengthKm;
 }
