@@ -2,15 +2,20 @@ package ru.meklaw.autodrome;
 
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.ZoneId;
 import java.util.TimeZone;
 
 @SpringBootApplication
 public class AutodromeApplication {
+
+    @Value("${client.zoneId}")
+    private String zoneId;
 
     public static void main(String[] args) {
         SpringApplication.run(AutodromeApplication.class, args);
@@ -29,5 +34,10 @@ public class AutodromeApplication {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public ZoneId localZoneId() {
+        return ZoneId.of(zoneId);
     }
 }
