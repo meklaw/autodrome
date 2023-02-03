@@ -14,6 +14,7 @@ public class TripDTO {
     private Long id;
     private ZonedDateTime startTimeUtc;
     private ZonedDateTime endTimeUtc;
+    private int lengthKm;
 
     public void changeTimeWithZone(ZoneId zoneId) {
         startTimeUtc = startTimeUtc.withZoneSameInstant(zoneId);
