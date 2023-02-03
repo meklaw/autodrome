@@ -13,7 +13,7 @@ import java.util.TreeMap;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Report {
-    private String type;
+    private Period type;
     private String reportingPeriod;
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
