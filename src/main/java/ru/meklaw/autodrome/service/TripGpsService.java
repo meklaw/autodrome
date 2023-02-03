@@ -218,6 +218,7 @@ public class TripGpsService {
                                .plusSeconds(deltaTimeAndPoint);
         }
         resultTrip.setEndTimeUtc(dateTime);
+        resultTrip.setLengthKm(generateTrip.getLengthKm());
 
         tripRepository.save(resultTrip);
         pointGpsService.saveAll(resultPointsOfTrip);
