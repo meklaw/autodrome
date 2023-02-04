@@ -18,7 +18,7 @@ public class Report {
     private Period period;
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
-    private TreeMap<ZonedDateTime, String> result;
+    private TreeMap<String, Long> result;
 
     public Report(ReportType type, Period period, ZonedDateTime startTime, ZonedDateTime endTime) {
         this.type = type;
