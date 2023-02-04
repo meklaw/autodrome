@@ -12,8 +12,9 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenerateReport {
-    ReportType type;
-    Period period;
+    private long vehicleId;
+    private ReportType type;
+    private Period period;
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
 }
