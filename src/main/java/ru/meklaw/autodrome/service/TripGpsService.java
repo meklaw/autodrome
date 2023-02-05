@@ -35,6 +35,8 @@ public class TripGpsService {
     private final ModelMapper modelMapper;
     private final RestTemplate restTemplate;
 
+    private ZonedDateTime uniqueDateTime = ZonedDateTime.now();
+
     @Value("${graphhopper.api.key}")
     private String graphhopperApiKey;
 
@@ -204,7 +206,7 @@ public class TripGpsService {
         double metersPerPoint = dirtyNewTrip.getDistanceMeters() / ((double) dirtyCountPoints);
         long deltaTimeAndPoint = (long) (metersPerPoint / speedMpS);
 
-        resultTrip.setStartTimeUtc(ZonedDateTime.now(ZoneId.of("UTC")));
+        resultTrip.setStartTimeUtc(uniqueDateTime);
         ZonedDateTime dateTime = resultTrip.getStartTimeUtc();
 
         for (GpsPoint point : resultPointsOfTrip) {
@@ -215,6 +217,7 @@ public class TripGpsService {
         }
         resultTrip.setEndTimeUtc(dateTime);
         resultTrip.setLengthKm(generateTrip.getLengthKm());
+        uniqueDateTime = dateTime.plusSeconds(deltaTimeAndPoint);
 
         tripRepository.save(resultTrip);
         pointGpsService.saveAll(resultPointsOfTrip);
