@@ -214,7 +214,7 @@ public class TripGpsService {
 
             resultTrip.setEndTimeUtc(dateTime);
             resultTrip.setLengthKm((int) (routingTripPoints.getDistanceMeters() / 1000 / totalTripsCount));
-            uniqueDateTime = dateTime.plusSeconds(deltaTimeAndPoint);
+            uniqueDateTime = dateTime.plusDays((long) (Math.random() * 2)).plusSeconds(deltaTimeAndPoint);
         }
 
         pointGpsService.saveAll(routingPoints.subList(0, totalTripsCount * 80));
