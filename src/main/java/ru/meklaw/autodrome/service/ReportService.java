@@ -40,7 +40,7 @@ public class ReportService {
         TreeMap<String, Long> resultMap = jdbcTemplate.query(getSqlRequest(generateReport.getPeriod()),
                                                               (rs, rowNum) -> Map.entry(rs.getString(generateReport.getPeriod()
                                                                                                                    .toString()), rs.getLong("total_length_km")),
-                                                              new Object[]{2,
+                                                              new Object[]{generateReport.getVehicleId(),
                                                                            Timestamp.from(generateReport.getStartTime()
                                                                                                         .toInstant()),
                                                                            Timestamp.from(generateReport.getEndTime()
