@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.meklaw.autodrome.dto.*;
 import ru.meklaw.autodrome.models.GpsPoint;
 import ru.meklaw.autodrome.models.Trip;
+import ru.meklaw.autodrome.models.Vehicle;
 import ru.meklaw.autodrome.repositories.TripRepository;
 import ru.meklaw.autodrome.repositories.VehiclesRepository;
 
@@ -125,10 +126,11 @@ public class TripGpsService {
                                   .get("hits")
                                   .get(0);
 
-            return root.get("country").asText()
-                    + root.get("state").asText("")
-                    + root.get("city").asText("")
-                    + root.get("street").asText("");
+            return root.get("country")
+                       .asText() + root.get("state")
+                                       .asText("") + root.get("city")
+                                                         .asText("") + root.get("street")
+                                                                           .asText("");
         } catch (NullPointerException | JsonProcessingException ignored) {
         }
         return "address not found";
@@ -160,8 +162,7 @@ public class TripGpsService {
     public String getMapUrlForTrip(List<GpsPoint> tripPoints) {
         val mapUrl = new StringBuilder("https://graphhopper.com/maps/?profile=car&layer=Omniscale");
 
-        for (int i = 0, point = 0, delta = tripPoints.size() / 80 + 1;
-             i < 79 && point < tripPoints.size();
+        for (int i = 0, point = 0, delta = tripPoints.size() / 80 + 1; i < 79 && point < tripPoints.size();
              i++, point += delta) {
 
             mapUrl.append("&point=");
@@ -180,55 +181,48 @@ public class TripGpsService {
         return mapUrl.toString();
     }
 
+    @Transactional()
     public void generateTrip(GenerateTrip generateTrip) {
-        Trip resultTrip = new Trip();
-        resultTrip.setVehicle(vehiclesRepository.findById(generateTrip.getVehicleId())
-                                                .orElseThrow(() -> new RuntimeException(
-                                                        "Vehicle with this id doesn't exist")));
+        Vehicle vehicle = vehiclesRepository.findById(generateTrip.getVehicleId())
+                                            .orElseThrow(() -> new RuntimeException("Vehicle with this id doesn't exist"));
         List<GpsPoint> randomGpsPoints = generateRandomPoints();
-        RoutingTripPoints dirtyNewTrip = routingPointsToTrip(randomGpsPoints.get(0), randomGpsPoints.get(1));
-        int dirtyCountPoints = dirtyNewTrip.getPoints()
-                                           .size();
-        double pointsPerKm = ((double) dirtyCountPoints) / (dirtyNewTrip.getDistanceMeters() / 1000);
-
-        int requiredNumberPoints = (int) (pointsPerKm * generateTrip.getLengthKm());
-        int randomStartIndex = (int) (Math.random() * (dirtyCountPoints - requiredNumberPoints));
-
-        if (randomStartIndex < 0 || dirtyCountPoints <= randomStartIndex + requiredNumberPoints) {
-            generateTrip(generateTrip);
-            return;
-        }
-        List<GpsPoint> resultPointsOfTrip = dirtyNewTrip.getPoints()
-                                                        .subList(randomStartIndex,
-                                                                randomStartIndex + requiredNumberPoints);
+        RoutingTripPoints routingTripPoints = routingPointsToTrip(randomGpsPoints.get(0), randomGpsPoints.get(1));
+        List<GpsPoint> routingPoints = routingTripPoints.getPoints();
+        int totalTripsCount = routingPoints.size() / 80;
+        List<Trip> newTrips = new ArrayList<>(totalTripsCount);
 
         double speedMpS = generateTrip.getMaxSpeedKph() / 2 / 3.6;
-        double metersPerPoint = dirtyNewTrip.getDistanceMeters() / ((double) dirtyCountPoints);
+        double metersPerPoint = routingTripPoints.getDistanceMeters() / ((double) routingPoints.size());
         long deltaTimeAndPoint = (long) (metersPerPoint / speedMpS);
 
-        resultTrip.setStartTimeUtc(uniqueDateTime);
-        ZonedDateTime dateTime = resultTrip.getStartTimeUtc();
+        for (int tripCount = 0; tripCount < totalTripsCount; tripCount++) {
+            newTrips.add(new Trip());
+            Trip resultTrip = newTrips.get(tripCount);
+            resultTrip.setVehicle(vehicle);
+            resultTrip.setStartTimeUtc(uniqueDateTime);
+            ZonedDateTime dateTime = uniqueDateTime;
 
-        for (GpsPoint point : resultPointsOfTrip) {
-            point.setVehicle(resultTrip.getVehicle());
-            point.setDateTime(dateTime);
-            dateTime = dateTime.withZoneSameInstant(ZoneId.of("UTC"))
-                               .plusSeconds(deltaTimeAndPoint);
+            for (int pointCount = tripCount * 80; pointCount < tripCount * 80 + 80; pointCount++) {
+                routingPoints.get(pointCount)
+                             .setVehicle(vehicle);
+                routingPoints.get(pointCount)
+                             .setDateTime(dateTime);
+
+                dateTime = dateTime.withZoneSameInstant(ZoneId.of("UTC"))
+                                   .plusSeconds(deltaTimeAndPoint);
+            }
+
+            resultTrip.setEndTimeUtc(dateTime);
+            resultTrip.setLengthKm((int) (routingTripPoints.getDistanceMeters() / 1000 / totalTripsCount));
+            uniqueDateTime = dateTime.plusSeconds(deltaTimeAndPoint);
         }
-        resultTrip.setEndTimeUtc(dateTime);
-        resultTrip.setLengthKm(generateTrip.getLengthKm());
-        uniqueDateTime = dateTime.plusSeconds(deltaTimeAndPoint);
 
-        tripRepository.save(resultTrip);
-        pointGpsService.saveAll(resultPointsOfTrip);
+        pointGpsService.saveAll(routingPoints.subList(0, totalTripsCount * 80));
+        tripRepository.saveAll(newTrips);
     }
 
-    public RoutingTripPoints routingPointsToTrip(GpsPoint startGpsPoint,
-                                                 GpsPoint endGpsPoint) {
-        val url = "https://graphhopper.com/api/1/route?profile=car&locale=en&points_encoded=false&point="
-                + startGpsPoint.getLat() + "," + startGpsPoint.getLon()
-                + "&point=" + endGpsPoint.getLat() + "," + endGpsPoint.getLon()
-                + "&key=" + graphhopperApiKey;
+    public RoutingTripPoints routingPointsToTrip(GpsPoint startGpsPoint, GpsPoint endGpsPoint) {
+        val url = "https://graphhopper.com/api/1/route?profile=car&locale=en&points_encoded=false&point=" + startGpsPoint.getLat() + "," + startGpsPoint.getLon() + "&point=" + endGpsPoint.getLat() + "," + endGpsPoint.getLon() + "&key=" + graphhopperApiKey;
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         val mapper = new ObjectMapper();
 
@@ -241,13 +235,12 @@ public class TripGpsService {
                                        .asDouble();
             pathsNode.path("points")
                      .get("coordinates")
-                     .forEach(coordinateNode ->
-                             gpsPoints.add(GpsPoint.builder()
-                                                   .lon(coordinateNode.get(0)
-                                                                      .asDouble())
-                                                   .lat(coordinateNode.get(1)
-                                                                      .asDouble())
-                                                   .build()));
+                     .forEach(coordinateNode -> gpsPoints.add(GpsPoint.builder()
+                                                                      .lon(coordinateNode.get(0)
+                                                                                         .asDouble())
+                                                                      .lat(coordinateNode.get(1)
+                                                                                         .asDouble())
+                                                                      .build()));
 
             return new RoutingTripPoints(gpsPoints, distance);
 
@@ -257,39 +250,62 @@ public class TripGpsService {
     }
 
     private List<GpsPoint> generateRandomPoints() {
-        List<Double> points = List.of(55.784945, 37.565977,
-                55.789110, 37.681950,
-                55.824380, 37.572920,
-                55.747420, 37.697870,
-                55.749045, 37.611690,
-                55.708640, 37.581360,
-                55.693870, 37.734510,
-                55.707650, 37.835063,
-                55.801688, 37.322621,
-                55.796478, 37.964279,
-                55.934713, 37.546760,
-                55.438432, 37.556057,
-                59.119960, 37.902756,
-                56.008830, 37.853389,
-                59.893800, 30.242890,
-                59.216127, 39.886872,
-                48.770732, 2.586623,
-                59.328785, 8.088549,
-                39.613125, 16.231488,
-                43.156063, 131.912766,
-                41.000344, 28.810442,
-                19.872946, 75.327196,
-                47.019841, 28.839209,
-                47.461521, 19.049556,
-                46.952052, 7.458751);
+        List<Double> points = List.of(55.784945,
+                37.565977,
+                55.789110,
+                37.681950,
+                55.824380,
+                37.572920,
+                55.747420,
+                37.697870,
+                55.749045,
+                37.611690,
+                55.708640,
+                37.581360,
+                55.693870,
+                37.734510,
+                55.707650,
+                37.835063,
+                55.801688,
+                37.322621,
+                55.796478,
+                37.964279,
+                55.934713,
+                37.546760,
+                55.438432,
+                37.556057,
+                59.119960,
+                37.902756,
+                56.008830,
+                37.853389,
+                59.893800,
+                30.242890,
+                59.216127,
+                39.886872,
+                48.770732,
+                2.586623,
+                59.328785,
+                8.088549,
+                39.613125,
+                16.231488,
+                43.156063,
+                131.912766,
+                41.000344,
+                28.810442,
+                19.872946,
+                75.327196,
+                47.019841,
+                28.839209,
+                47.461521,
+                19.049556,
+                46.952052,
+                7.458751);
 
         List<GpsPoint> randomGpsPoints = IntStream.iterate(0, n -> n < points.size(), n -> n + 2)
-                                                  .mapToObj(n ->
-                                                          GpsPoint.builder()
-                                                                  .lat(points.get(n))
-                                                                  .lon(points.get(n + 1))
-                                                                  .build()
-                                                  )
+                                                  .mapToObj(n -> GpsPoint.builder()
+                                                                         .lat(points.get(n))
+                                                                         .lon(points.get(n + 1))
+                                                                         .build())
                                                   .collect(Collectors.toList());
         Collections.shuffle(randomGpsPoints);
         return randomGpsPoints;
