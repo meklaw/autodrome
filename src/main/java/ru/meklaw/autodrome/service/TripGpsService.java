@@ -35,8 +35,6 @@ public class TripGpsService {
     private final ModelMapper modelMapper;
     private final RestTemplate restTemplate;
 
-    @Value("${yandex.geocoder.api.key}")
-    private String yandexApiKey;
     @Value("${graphhopper.api.key}")
     private String graphhopperApiKey;
 
@@ -116,21 +114,19 @@ public class TripGpsService {
 
     @NotNull
     public String findAddress(GpsPoint point) {
-        String url = "https://geocode-maps.yandex.ru/1.x/?apikey=" + yandexApiKey + "&format=json&geocode=" + point.getLat() + "," + point.getLon();
+        String url = "https://graphhopper.com/api/1/geocode?reverse=true&key=" + graphhopperApiKey + "&point=" + point.getLat() + "," + point.getLon();
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            JsonNode root = mapper.readTree(response.getBody());
-            return root.get("response")
-                       .get("GeoObjectCollection")
-                       .get("featureMember")
-                       .get(0)
-                       .get("GeoObject")
-                       .get("metaDataProperty")
-                       .get("GeocoderMetaData")
-                       .get("text")
-                       .asText();
+            JsonNode root = mapper.readTree(response.getBody())
+                                  .get("hits")
+                                  .get(0);
+
+            return root.get("country").asText()
+                    + root.get("state").asText("")
+                    + root.get("city").asText("")
+                    + root.get("street").asText("");
         } catch (NullPointerException | JsonProcessingException ignored) {
         }
         return "address not found";
