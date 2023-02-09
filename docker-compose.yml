@@ -1,17 +1,16 @@
 version: "3.9"
-
 services:
   db:
     image: postgres:15.1-alpine
+    container_name: db
     ports:
-      - "5432:5432"
+      - "2345:5432"
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "qls"
       POSTGRES_DB: "autodrome"
     volumes:
-      - "db-data:/var/lib/postgresql/data"
-
+      - ./DB/smallData/.:/docker-entrypoint-initdb.d
   app:
     build: .
     container_name: autodrome-app
@@ -30,14 +29,5 @@ services:
       - SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES=true
       - SPRING_MVC_HIDDENMETHOD_FILTER_ENABLED=true
       - CLIENT_ZONEID=Europe/Moscow
-      - JWT_SECRET=SecretWord
-      - GRAPHHOPPER_API_KEY=/run/secrets/GRAPHHOPPER_API_KEY
-    secrets:
-      - GRAPHHOPPER_API_KEY
-
-secrets:
-  GRAPHHOPPER_API_KEY:
-    file: secrets.env
-
-volumes:
-  db-data:
+      - JWT_SECRET=Secret
+      - GRAPHHOPPER_API_KEY=
