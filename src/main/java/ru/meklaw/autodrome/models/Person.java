@@ -28,9 +28,6 @@ public class Person implements UserDetails {
     @Column(name = "role")
     private String role;
 
-//    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private Manager manager;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(() -> role);
