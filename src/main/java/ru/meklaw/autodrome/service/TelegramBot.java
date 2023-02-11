@@ -24,12 +24,10 @@ import ru.meklaw.autodrome.repositories.PersonRepository;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
+// TODO: 11.02.2023 REFACTOR 
 public class TelegramBot extends TelegramLongPollingBot {
     private final AuthenticationManager authenticationManager;
     private final PersonRepository personRepository;
@@ -42,8 +40,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Value("${telegram-bot.token}")
     private String botToken;
 
-    private Map<Long, Boolean> session = new HashMap<>();
-    private Map<Long, Manager> manager = new HashMap<>();
+    private final Map<Long, Boolean> session = new HashMap<>();
+    private final Map<Long, Manager> manager = new HashMap<>();
 
 
     @Autowired
@@ -94,52 +92,40 @@ public class TelegramBot extends TelegramLongPollingBot {
             return;
         }
 
-        if (isSessionActive(chatId)) {
+        if (!isSessionActive(chatId)) {
             handleAuthentication(chatId, message);
             return;
         }
 
-        if (update.hasMessage() && update.getMessage()
-                                         .hasText()) {
+        if (message.equals("/report")) {
+            sendMessage(chatId, "Please enter the report information in the following format: " +
+                    "report: 2 CAR MONTH 2023-02-11T00:37:26.422294Z 2023-02-26T18:14:29.422294Z");
+            return;
+        }
 
-            if (message.equals("/report")) {
-                SendMessage sendMessage = SendMessage.builder()
-                                                     .chatId(String.valueOf(chatId))
-                                                     .text("Please enter the report information in the following format: " +
-                                                             "id CAR period start_date end_date. For example: 123 CAR DAY 2022-01-01 2022-01-31")
-                                                     .build();
-                try {
-                    execute(sendMessage);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                String[] parts = message.split(" ");
-                if (parts.length == 6) {
-                    long id = Long.parseLong(parts[0]);
-                    ReportType type = ReportType.valueOf(parts[1]);
-                    Period period = Period.valueOf(parts[2]);
-                    ZonedDateTime startTime = ZonedDateTime.parse(parts[3],
-                            DateTimeFormatter.ISO_DATE_TIME);
-                    ZonedDateTime endTime = ZonedDateTime.parse(parts[4],
-                            DateTimeFormatter.ISO_DATE_TIME);
-                    GenerateReport generateReport = new GenerateReport(id, type, period, startTime, endTime);
-                    SendMessage sendMessage = SendMessage.builder()
-                                                         .chatId(String.valueOf(chatId))
-                                                         .text(reportRestController.generateReport(generateReport)
-                                                                                   .toString())
-                                                         .build();
 
-                    try {
-                        execute(sendMessage);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-                }
+        if (message.startsWith("report: ")) {
+            String[] parts = message.split(" ");
+            System.out.println(Arrays.toString(parts));
+            if (parts.length == 6) {
+                long id = Long.parseLong(parts[1]);
+                ReportType type = ReportType.valueOf(parts[2]);
+                Period period = Period.valueOf(parts[3]);
+                ZonedDateTime startTime = ZonedDateTime.parse(parts[4],
+                        DateTimeFormatter.ISO_DATE_TIME);
+                ZonedDateTime endTime = ZonedDateTime.parse(parts[5],
+                        DateTimeFormatter.ISO_DATE_TIME);
+
+                GenerateReport generateReport = new GenerateReport(id, type, period, startTime, endTime);
+                String sss = reportRestController.generateReport(generateReport)
+                                               .toString();
+                System.out.println(sss);
+                sendMessage(chatId, sss);
+                return;
             }
         }
 
-        sendMessage(chatId, "Please log in first.");
+        sendMessage(chatId, "Please check your string.");
     }
 
     private boolean isStartCommand(String message) {
