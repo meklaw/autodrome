@@ -1,9 +1,6 @@
 package ru.meklaw.autodrome.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -11,6 +8,7 @@ import java.util.TreeMap;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Report {
