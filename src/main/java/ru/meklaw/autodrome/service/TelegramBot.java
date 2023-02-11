@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
-// TODO: 11.02.2023 REFACTOR 
+// TODO: 11.02.2023 REFACTOR
 public class TelegramBot extends TelegramLongPollingBot {
     private final AuthenticationManager authenticationManager;
     private final PersonRepository personRepository;
@@ -106,7 +106,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         if (message.startsWith("report: ")) {
             String[] parts = message.split(" ");
-            System.out.println(Arrays.toString(parts));
             if (parts.length == 6) {
                 long id = Long.parseLong(parts[1]);
                 ReportType type = ReportType.valueOf(parts[2]);
@@ -119,7 +118,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                 GenerateReport generateReport = new GenerateReport(id, type, period, startTime, endTime);
                 String sss = reportRestController.generateReport(generateReport)
                                                .toString();
-                System.out.println(sss);
                 sendMessage(chatId, sss);
                 return;
             }
