@@ -19,3 +19,15 @@ TODO
 - [ ] ТГ: сделать пользовательский интерфейс более доброжелательным.
 - [ ] ТГ: рефакторинг.
 - [ ] ТГ: вынос в другой модуль (многоблочный проект).
+
+## Технологии:
+1. Spring (Boot, Data, MVC, Security);
+1. Docker и Docker compose;
+1. PostgreSQL;
+1. Maven;
+1. GraphHopper API;
+1. TelegramBots;
+1. Thymeleaf;
+1. ModelMapper;
+1. JWT;
+1. Lombok;
