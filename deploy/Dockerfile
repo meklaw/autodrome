@@ -2,10 +2,11 @@ FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:go-offline
+COPY gradlew build.gradle.kts settings.gradle.kts ./
+COPY gradle/ ./gradle/
 
-COPY src ./src
+RUN ./gradlew dependencies --no-daemon
 
-CMD ["./mvnw", "spring-boot:run", "-DskipTests"]
+COPY src ./src/
+
+CMD ["./gradlew", "bootRun", "-x", "test"]
