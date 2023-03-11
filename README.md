@@ -30,12 +30,12 @@ TODO
 
 ## Технологии:
 1. Spring (Boot, Data, MVC, Security);
-1. Docker и Docker compose;
-1. PostgreSQL;
-1. Maven;
-1. GraphHopper API;
-1. TelegramBots;
-1. Thymeleaf;
-1. ModelMapper;
-1. JWT;
-1. Lombok;
+2. Docker и Docker compose;
+3. PostgreSQL;
+4. Maven;
+5. GraphHopper API;
+6. TelegramBots;
+7. Thymeleaf;
+8. ModelMapper;
+9. JWT;
+10. Lombok;
