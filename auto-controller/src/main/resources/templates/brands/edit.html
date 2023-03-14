@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Vehicle Brand</title>
+</head>
+<body>
+<h1>Edit Vehicle Brand</h1>
+<form th:action="@{/brands/{id}(id=${brand.id})}" th:method="PUT" th:object="${brand}">
+    <input name="_method" type="hidden" value="PUT"/>
+    <!-- Form fields for editing the vehicle brand -->
+    <label for="name">Name:</label>
+    <input id="name" th:field="*{name}" type="text"/><br/>
+    <label for="type">Type:</label>
+    <select id="type" th:field="*{type}">
+        <!-- Use th:each to loop through the list of vehicle types -->
+        <option th:each="type : ${vehicleTypes}" th:text="${type}" th:value="${type}"></option>
+    </select><br/>
+    <label for="tank">Tank:</label>
+    <input id="tank" th:field="*{tank}" type="number"/><br/>
+    <label for="loadCapacity">Load Capacity:</label>
+    <input id="loadCapacity" th:field="*{loadCapacity}" type="number"/><br/>
+    <label for="numberOfPlaces">Number of Places:</label>
+    <input id="numberOfPlaces" th:field="*{numberOfPlaces}" type="number"/><br/>
+    <input type="submit" value="Save"/>
+</form>
+<br/>
+<a th:href="@{/brands}" th:text="'Brands'"></a>
+</body>
+</html>

@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 
+
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -33,3 +35,5 @@ build/
 .vscode/
 /deploy/.env
 /src/main/resources/application-test.properties
+/.gradle/
+/auto-controller/src/main/resources/application-test.properties
