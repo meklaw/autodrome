@@ -36,4 +36,4 @@ build/
 /deploy/.env
 /src/main/resources/application-test.properties
 /.gradle/
-/auto-controller/src/main/resources/application-test.properties
+application-test.properties
