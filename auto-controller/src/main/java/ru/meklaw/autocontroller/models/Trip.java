@@ -1,12 +1,12 @@
 package ru.meklaw.autocontroller.models;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Setter
