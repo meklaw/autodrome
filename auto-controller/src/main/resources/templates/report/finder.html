@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report finder</title>
+</head>
+<body>
+<h1>Report finder</h1>
+<!--/*@thymesVar id="vehicle" type="ru.meklaw.autocontroller.dto.GenerateReport"*/-->
+<form action="#" th:action="@{/report}" th:object="${generateReport}" method="post">
+    <div>
+        <label for="vehicleId">Vehicle ID:</label>
+        <input type="text" id="vehicleId" th:field="*{vehicleId}"/>
+    </div>
+    <div>
+        <label for="type">Report Type:</label>
+        <select id="type" th:field="*{type}">
+            <option th:each="type : ${reportTypes}"
+                    th:value="${type}"
+                    th:text="${type.getDescription()}"/>
+        </select>
+    </div>
+    <div>
+        <label for="period">Period:</label>
+        <select id="period" th:field="*{period}">
+            <option th:each="period : ${reportPeriods}"
+                    th:value="${period}"
+                    th:text="${period.name()}"/>
+        </select>
+    </div>
+    <div>
+        <label for="startTime">Start Time:</label>
+        <input type="text" id="startTime" th:field="*{startTime}"/>
+    </div>
+    <div>
+        <label for="endTime">End Time:</label>
+        <input type="text" id="endTime" th:field="*{endTime}"/>
+    </div>
+    <div>
+        <input type="submit" value="Generate Report"/>
+    </div>
+</form>
+
+<br/>
+<a th:href="@{/enterprises}" th:text="'Back to enterprises'"></a>
+</body>
+</html>

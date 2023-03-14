@@ -33,3 +33,4 @@ build/
 .vscode/
 /deploy/.env
 /src/main/resources/application-test.properties
+/.gradle/
