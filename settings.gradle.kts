@@ -1,3 +1,3 @@
 rootProject.name = "autodrome"
-include("auto-controller")
+include("controller")
 include("auto-domain")

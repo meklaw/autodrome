@@ -12,13 +12,13 @@ import java.time.ZoneId;
 import java.util.TimeZone;
 
 @SpringBootApplication
-public class AutoControllerApplication {
+public class ControllerApplication {
 
     @Value("${client.zoneId}")
     private String zoneId;
 
     public static void main(String[] args) {
-        SpringApplication.run(AutoControllerApplication.class, args);
+        SpringApplication.run(ControllerApplication.class, args);
     }
 
     @PostConstruct
